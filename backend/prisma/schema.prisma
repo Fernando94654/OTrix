@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+
+  // Set the connection string in the .env file, example:
+  // DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
+  // url      = env("DATABASE_URL")
+
+}
+
+model User {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  password      String?
+  birthday      DateTime?
+  gender        String?
+  rk_employee   Boolean       @default(false)
+  current_level Int?
+  money         Float?
+
+  levelsPlayed  LevelPlayed[]
+}
+
+model Level {
+  id         String        @id @default(uuid())
+  name       String?
+  max_score  Int?
+  difficulty String?
+
+  levelsPlayed LevelPlayed[]
+}
+
+model LevelPlayed {
+  id        String   @id @default(uuid())
+  user_id   String
+  level_id  String
+  score     Int?
+  attempts  Int?
+  time_used Int?
+  date      DateTime?
+
+  user  User  @relation(fields: [user_id], references: [id])
+  level Level @relation(fields: [level_id], references: [id])
+
+  @@index([user_id])
+  @@index([level_id])
+}
+
+
