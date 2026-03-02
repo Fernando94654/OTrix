@@ -1,50 +1,46 @@
 body {
-    background: white;
     height: 100vh;
+    background: #cd163f;;
+}
 
-    
+@font-face {
+    font-family: "Google-sans";
+    src: url("fonts/static/GoogleSans-Regular.ttf") format("truetype");
 }
 
 .btn-custom {
-    font-family: sans-serif;
+    font-family: Google-sans;
     color: whitesmoke;
     font-weight: 600;
     width: 80%; /* Para teléfono */
     max-width: 300px; /* Para computadoras*/
     letter-spacing: 1px;
-    background-color: rgb(184, 30, 17); 
+    background-color: #cd163f; 
     border: none;
 
 }
 .btn-custom:hover {
-    background-color: rgb(235, 96, 10); 
+    background-color: #a51233;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(8, 217, 214, 0.4);
     color: whitesmoke;
 }
-.card-custom {
-    background: rgba(158, 32, 32, 0.1); 
-    backdrop-filter: blur(10px); 
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: white;
-    border-radius: 15px;
-}
-.empresa-titulo {
-    font-size: 3.5rem;          
-    font-weight: 800;           
-    color: #ffffff;
-    text-transform: uppercase;  
-    letter-spacing: 5px;        
-    
-    text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-                 
-    margin-bottom: 20px;
-}
+
 .logo-empresa{
     width: 70%;
     height: auto;
 
 }
 .contenedor-botones{
-    margin-top: 100px;
+    margin-top: 20px;
+}
+
+.bloque {
+    background-color: whitesmoke;
+    padding-bottom: 50px;
+    width: 90%;       
+    max-width: 400px;
+    border-radius: 8px;
+    margin-top: 10%;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 }
