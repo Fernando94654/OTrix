@@ -3,6 +3,7 @@
 
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// Get DATABASE_URL from .env file
 
 generator client {
   provider = "prisma-client"
@@ -11,39 +12,63 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-
-  // Set the connection string in the .env file, example:
-  // DATABASE_URL="postgresql://USER:PASSWORD@HOST:PORT/DATABASE?schema=public"
-  // url      = env("DATABASE_URL")
-
 }
 
 model User {
-  id            String        @id @default(uuid())
-  email         String        @unique
-  password      String?
-  birthday      DateTime?
-  gender        String?
-  rk_employee   Boolean       @default(false)
-  current_level Int?
-  money         Float?
+  id         String       @id
+  email      String       @unique
+  password   String
+  birthday   DateTime?
+  gender     Boolean?
+  admin      Boolean
+  company    String
+  created_at DateTime?
 
-  levelsPlayed  LevelPlayed[]
+  client      Client       @relation(fields: [company], references: [id])
+  sessions    Session[]
+  levelsPlayed LevelPlayed[]
+
+  @@index([company])
+  @@map("users")
 }
 
 model Level {
-  id         String        @id @default(uuid())
+  id         Int          @id
   name       String?
   max_score  Int?
   difficulty String?
 
   levelsPlayed LevelPlayed[]
+
+  @@map("level")
+}
+
+model Session {
+  id                       String   @id
+  user_id                  String
+  refresh_token            String
+  refresh_token_expires_at DateTime
+  created_at               DateTime?
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+  @@map("sessions")
+}
+
+model Client {
+  id    String @id
+  name  String?
+
+  users User[]
+
+  @@map("clients")
 }
 
 model LevelPlayed {
-  id        String   @id @default(uuid())
+  id        String   @id
   user_id   String
-  level_id  String
+  level_id  Int
   score     Int?
   attempts  Int?
   time_used Int?
@@ -54,6 +79,7 @@ model LevelPlayed {
 
   @@index([user_id])
   @@index([level_id])
+  @@map("level_played")
 }
 
 
