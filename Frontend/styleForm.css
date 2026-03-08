@@ -41,6 +41,7 @@ label {
     color: black;
     border: 1px, solid black;
     border-radius: 8px;
+    padding-left: 2%;
 }
 .input-control:focus {
     background-color: #b0a8aa;
@@ -52,6 +53,7 @@ label {
 
 .bloque {
     background-color: whitesmoke;
+    padding-left: 3%;
     padding-bottom: 50px;
     width: 90%;       
     max-width: 400px;
