@@ -13,10 +13,25 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
-    signIn(signInDto: SignInDto) {
-        // Implement login logic here
-        
-        return `This action logs in a user with email: ${signInDto.email}`;
+    async signIn(signInDto: SignInDto) {
+        const user = await this.prisma.user.findUnique({
+            where: { email: signInDto.email },
+        });
+
+        if (!user) {
+            throw new BadRequestException('Invalid email or password');
+        }
+
+        const isMatch = await bcrypt.compare(signInDto.password, user.password);
+
+        if (!isMatch) {
+            throw new BadRequestException('Invalid email or password');
+        }
+
+        const payload = { email: user.email, sub: user.id };
+        const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+
+        return { access_token: accessToken };
     }
 
     async signUp(signUpDto: SignUpDto) {
