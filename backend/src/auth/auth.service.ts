@@ -25,6 +25,13 @@ export class AuthService {
         }
 
         const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
+        // Verify unique email
+        const existingUser = await this.prisma.user.findUnique({
+            where: { email: signUpDto.email },
+        });
+        if (existingUser) {
+            throw new BadRequestException('Email already in use');
+        }
         const user = await this.prisma.user.create({
             data: {
                 name: signUpDto.name,
@@ -34,7 +41,7 @@ export class AuthService {
                 birthday: new Date(signUpDto.birthday),
                 gender: signUpDto.gender,
                 admin: false,
-                company: signUpDto.company,
+                company_id: signUpDto.company,
             },
             select: {
                 id: true,
@@ -43,7 +50,7 @@ export class AuthService {
                 last_name: true,
                 birthday: true,
                 gender: true,
-                company: true,
+                company_id: true,
             }
         });
 

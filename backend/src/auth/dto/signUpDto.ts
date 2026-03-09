@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsDateString, IsEnum } from 'class-validator';
+import { IsEmail, IsString, IsDateString, IsEnum, IsOptional } from 'class-validator';
 import { Gender } from '../../../generated/prisma/enums.js';
 import { Type } from 'class-transformer';
 
@@ -22,6 +22,7 @@ export class SignUpDto {
     @IsEnum(Gender)
     gender: Gender;
 
+    @IsOptional()
     @IsString()
     company: string;
 }

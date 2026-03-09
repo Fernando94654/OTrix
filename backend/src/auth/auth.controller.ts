@@ -1,8 +1,10 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service.js';
 import { SignInDto } from './dto/signInDto.js';
 import { SignUpDto } from './dto/signUpDto.js';
+import { ApiKeyGuard } from './api-key/api-key.guard.js';
 
+@UseGuards(ApiKeyGuard)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
