@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { LevelController } from './level.controller';
-import { LevelService } from './level.service';
+import { LevelController } from './level.controller.js';
+import { LevelService } from './level.service.js';
 
 @Module({
   controllers: [LevelController],

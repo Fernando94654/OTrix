@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { UsersService } from './users.service';
+import { UsersService } from './users.service.js';
 
 @Controller('users')
 export class UsersController {
@@ -10,8 +10,4 @@ export class UsersController {
         return this.usersService.getAllUsers();
     }
 
-    @Get(':id')
-    getUserData(id: string) {
-        return this.usersService.getUserById(id);
-    }
 }

@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { PrismaService } from './prisma/prisma.service';
-import { LevelPlayedModule } from './level_played/level_played.module';
-import { ClientsModule } from './clients/clients.module';
-import { SessionsModule } from './sessions/sessions.module';
-import { LevelModule } from './level/level.module';
-
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+import { UsersModule } from './users/users.module.js';
+import { PrismaModule } from './prisma/prisma.module.js';
+import { LevelPlayedModule } from './level_played/level_played.module.js';
+import { ClientsModule } from './clients/clients.module.js';
+import { SessionsModule } from './sessions/sessions.module.js';
+import { LevelModule } from './level/level.module.js';
+import { AuthModule } from './auth/auth.module.js';
 @Module({
-  imports: [UsersModule, LevelPlayedModule, ClientsModule, SessionsModule, LevelModule],
+  imports: [PrismaModule, UsersModule, LevelPlayedModule, ClientsModule, SessionsModule, LevelModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}
