@@ -24,7 +24,7 @@ model User {
   password   String
   birthday   DateTime?
   gender     Gender?
-  admin      Boolean
+  role       Role
   created_at DateTime?
   company    Company?      @relation(fields: [company_id], references: [id])
 
@@ -98,4 +98,9 @@ enum Gender {
   MALE
   FEMALE
   OTHER
+}
+
+enum Role {
+  USER
+  ADMIN
 }

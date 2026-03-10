@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignInDto } from './dto/signInDto.js';
 import { SignUpDto} from './dto/signUpDto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { User, Session } from '../../generated/prisma/client.js';
+import { Role } from '../../generated/prisma/client.js';
 import bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
@@ -29,9 +29,11 @@ export class AuthService {
         }
 
         const payload = { email: user.email, sub: user.id };
-        const accessToken = this.jwtService.sign(payload, { expiresIn: '1h' });
+        const refresh_token = this.jwtService.sign(payload, {
+            expiresIn: '7d',
+        });
 
-        return { access_token: accessToken };
+        return { refresh_token: refresh_token };
     }
 
     async signUp(signUpDto: SignUpDto) {
@@ -55,7 +57,7 @@ export class AuthService {
                 password: hashedPassword,
                 birthday: new Date(signUpDto.birthday),
                 gender: signUpDto.gender,
-                admin: false,
+                role: Role.USER,
                 company_id: signUpDto.company,
             },
             select: {
