@@ -1,1 +1,8 @@
 */node_modules
+
+Game/Otrix_Unity/Library/
+Game/Otrix_Unity/Temp/
+Game/Otrix_Unity/Logs/
+Game/Otrix_Unity/Build/
+Game/Otrix_Unity/UserSettings/
+Game/Otrix_Unity/.vscode/
