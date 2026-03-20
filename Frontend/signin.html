@@ -11,100 +11,100 @@
     <div class="container">
         <div class="row bloque mx-auto my-center">
             
+            <form onsubmit="validarFormulario(event)">
+                <div class="mt-3 text-begin">
+                    <label for="idName" class="fw-bold" >
+                        Name
+                    </label>
+                    
+                    <input type="text"  name="name" id="idName" placeholder="Ej. John"
+                    class="input-control" required>
 
-            <div class="mt-3 text-begin">
-                <label for="idName" class="fw-bold" >
-                    Name
-                </label>
+                </div>
+
+                <div class="mt-3 text-begin">
+                    <label for="idLastName" class="fw-bold">
+                        Last Name
+                    </label>
+
+                    <input type="text"  name="lastName" id="idLastName" placeholder="Ej. Doe" class="input-control" required>
+                </div>
+
+                <div class="mt-3 text-begin">
+                    <label for="idGender" class="fw-bold">
+                        Gender
+                    </label>
+                    <input type="text" name="gender" id="idGender" class="input-control" list="gender-options" required>
+
+                    <datalist id="gender-options">
+                        <option value="Femenine"></option>
+                        <option value="Masculine"></option>
+                        <option value="Non binary"></option>
+                        <option value="Prefer not to say"></option>
+                    </datalist>
+                    
+                </div>
+
+                <div class="mt-3 text-begin">
+                    <label for="idDateOfBirth" class="fw-bold">
+                        Date of birth
+                    </label>
+                    <input type="date" name="DateOfBirth" id="idDateOfBirth" class="input-control" required>
+        
+                </div>
                 
-                <input type="text"  name="name" id="idName" placeholder="Ej. John"
-                class="input-control" required>
+                <div class="mt-3 text-begin">
+                    <label for="idEmail" class="fw-bold">
+                        Email
+                    </label>
 
-            </div>
+                    <input  type="email" name="email" id="idEmail" placeholder="Ej. johndoe@gmail.com" class="input-control" required> 
+                </div>
 
-            <div class="mt-3 text-begin">
-                <label for="idLastName" class="fw-bold">
-                    Last Name
-                </label>
+                <div class="mt-3 text-begin">
+                    <label for="idUsername" class="fw-bold">
+                        Username
+                    </label>
+                    
+                    <input type="text" name="username" id="idUsername" placeholder="Ej. John123"  class="input-control"  required>
+                </div>
 
-                <input type="text"  name="lastName" id="idLastName" placeholder="Ej. Doe" class="input-control" required>
-            </div>
-
-            <div class="mt-3 text-begin">
-                <label for="idGender" class="fw-bold">
-                    Gender
-                </label>
-                <input type="text" name="gender" id="idGender" class="input-control" list="gender-options" required>
-
-                <datalist id="gender-options">
-                    <option value="Femenine"></option>
-                    <option value="Masculine"></option>
-                    <option value="Non binary"></option>
-                    <option value="Prefer not to say"></option>
-                </datalist>
+                <div class="mt-3 text-begin">
+                    <label for="idCompany" class="fw-bold">
+                        Which company are you with
+                    </label> 
+                </div>
                 
-            </div>
+                <div class="mt-3 text-begin">
+                    <label for="idPassword" class="fw-bold">
+                        Password
+                    </label>
+                    
+                    <input type="password" name="password" id="idPassword" class="input-control"  placeholder="Ej. 12345678"   required>
+                </div>
 
-            <div class="mt-3 text-begin">
-                <label for="idDateOfBirth" class="fw-bold">
-                    Date of birth
-                </label>
-                <input type="date" name="DateOfBirth" id="idDateOfBirth" class="input-control" required>
-    
-            </div>
-            
-            <div class="mt-3 text-begin">
-                <label for="idEmail" class="fw-bold">
-                    Email
-                </label>
+                <div class="mt-3 text-begin">
+                    <label class="fw-bold">
+                        Confirm password
+                    </label>
+                    
+                    <input class="input-control" type="password" name="ConfirmPassword"  id="idConfirmPassword" required>
+                </div>
 
-                <input  type="email" name="email" id="idEmail" placeholder="Ej. johndoe@gmail.com" class="input-control" required> 
-            </div>
-
-            <div class="mt-3 text-begin">
-                <label for="idUsername" class="fw-bold">
-                    Username
-                </label>
                 
-                <input type="text" name="username" id="idUsername" placeholder="Ej. John123"  class="input-control"  required>
-            </div>
 
-            <div class="mt-3 text-begin">
-                <label for="idCompany" class="fw-bold">
-                    Which company are you with
-                </label> 
-            </div>
-            
-            <div class="mt-3 text-begin">
-                <label for="idPassword" class="fw-bold">
-                    Password
-                </label>
-                
-                <input type="password" name="password" id="idPassword" class="input-control"  placeholder="Ej. 12345678"   required>
-            </div>
+                <div class="text-end">
+                    <button class="btn btn-custom mt-4" type="submit">Send</button>
 
-            <div class="mt-3 text-begin">
-                <label class="fw-bold">
-                    Confirm password
-                </label>
-                
-                <input class="input-control" type="password" name="ConfirmPassword"  id="idConfirmPassword" required>
-            </div>
-
-            
-
-            <div class="text-end">
-                <a href="videogame.html"><button class="btn btn-custom mt-4" type="submit">Send</button></a>
-
-                <a href="index.html"> <button class="btn btn-custom mt-4 mx-2"> Go back</button></a>
-            </div>
-
+                    <a href="index.html"> <button class="btn btn-custom mt-4 mx-2"> Go back</button></a>
+                </div>
+            </form>
         </div>
             
     </div>
                 
         
 
-    
+    <script src="index.js"></script>
 </body>
 </html>
