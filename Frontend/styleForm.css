@@ -8,71 +8,41 @@ body {
     src: url("fonts/static/GoogleSans-Regular.ttf") format("truetype");
 }
 
-label {
-    display: block;
-    margin-bottom: 2%;
-    margin-top: 20;
-    font-family: Google-sans;
+body {
+    font-family: "Google-sans", Arial, sans-serif;
 }
 
 .btn-custom {
-    font-family: sans-serif;
     color: whitesmoke;
     font-weight: 600;
-    width: 80%; /* Para teléfono */
-    max-width: 100px; /* Para computadoras*/
     letter-spacing: 1px;
     background-color: #cd163f; 
     border: none;
-
+    border-radius: 8px;
+    transition: all 0.3s ease;
 }
+
 .btn-custom:hover {
     background-color: #a51233;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(8, 217, 214, 0.4);
-    color: whitesmoke;
-}
-.contenedor-botones{
-    margin-top: 100px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    color: white;
 }
 
 .input-control {
-    background-color: rgba(205, 22, 63, 0.05);
-    color: black;
-    border: 1px, solid black;
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ced4da;
     border-radius: 8px;
-    padding-left: 2%;
 }
-.input-control:focus {
-    background-color: #b0a8aa;
-    color: black;
-    border: rgb(68, 68, 68);
-    outline: none;
 
+.input-control:focus {
+    background-color: #ffffff;
+    border-color: #cd163f;
+    box-shadow: 0 0 0 0.25rem rgba(205, 22, 63, 0.25);
+    outline: none;
 }
 
 .bloque {
-    background-color: whitesmoke;
-    padding-left: 3%;
-    padding-bottom: 50px;
-    width: 90%;       
-    max-width: 400px;
-    border-radius: 8px;
-    margin-top: 10%;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-}
-
-.sub-title {
-    background-color: #cd163f;
-    padding-left: 2%;
-    padding-right: 2%;
-    padding-top: 1%;
-    padding-bottom: 1%;
-    color: white;
-    width: fit-content;
-    border-radius: 8px;
-    border: 2px, black, solid;
-    margin-bottom: 2%;
-    
-    
+    border-radius: 16px !important;
 }

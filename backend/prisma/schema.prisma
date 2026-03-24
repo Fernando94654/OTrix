@@ -24,7 +24,7 @@ model User {
   password   String
   birthday   DateTime?
   gender     Gender?
-  role       Role
+  role       Role @default(USER)
   created_at DateTime?
   company    Company?      @relation(fields: [company_id], references: [id])
 
