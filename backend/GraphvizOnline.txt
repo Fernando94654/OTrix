@@ -1,0 +1,63 @@
+
+graph ER_Full {
+    fontname="Helvetica,Arial,sans-serif"
+    node [fontname="Helvetica,Arial,sans-serif", size="10"]
+    edge [fontname="Helvetica,Arial,sans-serif", fontsize="10"]
+    layout=fdp
+    overlap=false
+    splines=true
+    K=0.8
+
+    // --- ENTIDADES (Rectángulos) ---
+    node [shape=box, style=filled, fillcolor="#E1F5FE", stroke="#01579B"];
+    Users; Companies; Sessions; Level; Level_Played;
+
+    // --- RELACIONES (Rombos) ---
+    node [shape=diamond, style=filled, fillcolor="#FFF9C4", stroke="#FBC02D"];
+    Pertenece [label="Pertenece"];
+    Inicia [label="Inicia"];
+    Realiza [label="Realiza"];
+    Contiene [label="Contiene"];
+
+    // --- ATRIBUTOS (Óvalos) ---
+    node [shape=ellipse, style=filled, fillcolor="#FFFFFF", stroke="#757575"];
+
+    // Users
+    u1 [label=<<u>id</u>>]; u2 [label="name"]; u3 [label="last_name"]; u4 [label="email (U)"]; 
+    u5 [label="password"]; u6 [label="birthday"]; u7 [label="gender"]; u8 [label="role"]; u9 [label="created_at"];
+    {u1 u2 u3 u4 u5 u6 u7 u8 u9} -- Users;
+
+    // Companies
+    c1 [label=<<u>id</u>>]; c2 [label="name"];
+    {c1 c2} -- Companies;
+
+    // Sessions
+    s1 [label=<<u>id</u>>]; s2 [label="refresh_token"]; s3 [label="expires_at"]; s4 [label="created_at"];
+    {s1 s2 s3 s4} -- Sessions;
+
+    // Level
+    l1 [label=<<u>id</u>>]; l2 [label="name"]; l3 [label="max_score"]; l4 [label="difficulty"];
+    {l1 l2 l3 l4} -- Level;
+
+    // Level_Played
+    lp1 [label=<<u>id</u>>]; lp2 [label="score"]; lp3 [label="attempts"]; lp4 [label="time_used"]; lp5 [label="date"];
+    {lp1 lp2 lp3 lp4 lp5} -- Level_Played;
+
+  
+    // --- CONEXIONES ENTIDAD - RELACIÓN ---
+    // User - Company
+    Users -- Pertenece [label="N"];
+    Pertenece -- Companies [label="1"];
+
+    // User - Session
+    Users -- Inicia [label="1"];
+    Inicia -- Sessions [label="N"];
+
+    // User - Level_Played
+    Users -- Realiza [label="1"];
+    Realiza -- Level_Played [label="N"];
+
+    // Level - Level_Played
+    Level -- Contiene [label="1"];
+    Contiene -- Level_Played [label="N"];
+}

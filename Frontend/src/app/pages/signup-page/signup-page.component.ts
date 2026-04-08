@@ -3,6 +3,7 @@ import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
 import { AuthService, SignUpPayload } from '../../core/auth.service';
+import { NotificationService } from '../../core/notifications/notification.service';
 
 @Component({
   selector: 'app-signup-page',
@@ -14,9 +15,12 @@ export class SignupPageComponent {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly notifications = inject(NotificationService);
 
   isSubmitting = false;
   errorMessage = '';
+  isPasswordVisible = false;
+  isConfirmPasswordVisible = false;
 
   readonly signupForm = this.fb.group({
     name: ['', [Validators.required]],
@@ -29,20 +33,31 @@ export class SignupPageComponent {
     confirmPassword: ['', [Validators.required]]
   });
 
+  togglePasswordVisibility(): void {
+    this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.isConfirmPasswordVisible = !this.isConfirmPasswordVisible;
+  }
+
   async onSubmit(): Promise<void> {
     if (this.signupForm.invalid || this.isSubmitting) {
       this.signupForm.markAllAsTouched();
+      this.notifications.info('Please complete all required fields to create your account.');
       return;
     }
 
     if (this.signupForm.controls.password.value !== this.signupForm.controls.confirmPassword.value) {
       this.errorMessage = 'Passwords do not match.';
+      this.notifications.error(this.errorMessage);
       return;
     }
 
     const birthdayValue = this.signupForm.controls.birthday.value;
     if (!birthdayValue) {
       this.errorMessage = 'Please provide a valid birthday.';
+      this.notifications.error(this.errorMessage);
       return;
     }
 
@@ -66,9 +81,11 @@ export class SignupPageComponent {
     try {
       const response = await firstValueFrom(this.authService.signUp(payload));
       this.authService.saveToken(response.refresh_token);
+      this.notifications.success('Account created successfully. Welcome to Otrix!');
       await this.router.navigate(['/videogame']);
     } catch {
       this.errorMessage = 'Signup error. Please verify your data and try again.';
+      this.notifications.error(this.errorMessage);
     } finally {
       this.isSubmitting = false;
     }
