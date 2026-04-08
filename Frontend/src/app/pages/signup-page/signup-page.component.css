@@ -1,1 +1,9 @@
-/* Signup page uses global style classes. */
+.signup-card {
+	width: 100%;
+	max-width: 600px;
+}
+
+.signup-title {
+	color: #cd163f;
+	font-weight: 700;
+}

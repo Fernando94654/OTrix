@@ -1,1 +1,12 @@
-/* Home page uses global styles from src/styles.css */
+.home-card {
+	max-width: 400px;
+}
+
+.home-brand-logo {
+	width: 70%;
+	height: auto;
+}
+
+.home-menu-buttons {
+	margin-top: 20px;
+}

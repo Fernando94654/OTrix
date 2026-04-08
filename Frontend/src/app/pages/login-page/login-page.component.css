@@ -1,1 +1,9 @@
-/* Login page uses global style classes. */
+.login-card {
+	width: 100%;
+	max-width: 450px;
+}
+
+.login-title {
+	color: #cd163f;
+	font-weight: 700;
+}
