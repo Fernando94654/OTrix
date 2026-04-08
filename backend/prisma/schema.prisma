@@ -85,14 +85,6 @@ model LevelPlayed {
   @@map("level_played")
 }
 
-model ApiKey {
-  id          String   @id @default(uuid())
-  name        String
-  keyHash     String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-}
-
 
 enum Gender {
   MALE
