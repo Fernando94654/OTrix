@@ -1,0 +1,68 @@
+<div class="container app-page d-flex justify-content-center align-items-center py-4">
+  <div class="bloque p-5 bg-white shadow-lg rounded" style="width: 100%; max-width: 600px;">
+    <div class="text-center mb-4">
+      <h2 style="color: #cd163f; font-weight: bold;">Create Account</h2>
+      <p class="text-muted">Join us by creating a new account</p>
+    </div>
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+      <div class="row g-3">
+        <div class="col-md-6 form-floating">
+          <input id="idName" type="text" class="form-control input-control" placeholder="John" formControlName="name" />
+          <label for="idName" class="ms-2">First Name</label>
+        </div>
+
+        <div class="col-md-6 form-floating">
+          <input id="idLastName" type="text" class="form-control input-control" placeholder="Doe" formControlName="last_name" />
+          <label for="idLastName" class="ms-2">Last Name</label>
+        </div>
+
+        <div class="col-md-6 form-floating">
+          <select id="idGender" class="form-select input-control" formControlName="gender">
+            <option value="" disabled>Select gender</option>
+            <option value="FEMALE">Female</option>
+            <option value="MALE">Male</option>
+            <option value="OTHER">Other / Prefer not to say</option>
+          </select>
+          <label for="idGender" class="ms-2">Gender</label>
+        </div>
+
+        <div class="col-md-6 form-floating">
+          <input id="idDateOfBirth" type="date" class="form-control input-control" formControlName="birthday" />
+          <label for="idDateOfBirth" class="ms-2">Date of Birth</label>
+        </div>
+
+        <div class="col-md-12 form-floating">
+          <input id="idEmail" type="email" class="form-control input-control" placeholder="johndoe@gmail.com" formControlName="email" />
+          <label for="idEmail" class="ms-2">Email</label>
+        </div>
+
+        <div class="col-md-12 form-floating">
+          <input id="idCompany" type="text" class="form-control input-control" placeholder="Company Name" formControlName="company" />
+          <label for="idCompany" class="ms-2">Company (Optional)</label>
+        </div>
+
+        <div class="col-md-6 form-floating">
+          <input id="idPassword" type="password" class="form-control input-control" placeholder="Password" formControlName="password" />
+          <label for="idPassword" class="ms-2">Password</label>
+        </div>
+
+        <div class="col-md-6 form-floating">
+          <input id="idConfirmPassword" type="password" class="form-control input-control" placeholder="Confirm Password" formControlName="confirmPassword" />
+          <label for="idConfirmPassword" class="ms-2">Confirm Password</label>
+        </div>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger mt-4" role="alert">{{ errorMessage }}</div>
+      }
+
+      <div class="d-grid gap-2 mt-5">
+        <button class="btn btn-custom w-100 py-2" type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Creating Account...' : 'Create Account' }}
+        </button>
+        <a routerLink="/" class="btn btn-outline-secondary w-100 py-2">Go back</a>
+      </div>
+    </form>
+  </div>
+</div>

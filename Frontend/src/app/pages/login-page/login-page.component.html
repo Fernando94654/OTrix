@@ -1,0 +1,31 @@
+<div class="container app-page d-flex justify-content-center align-items-center">
+  <div class="bloque p-5 bg-white shadow-lg rounded" style="width: 100%; max-width: 450px;">
+    <div class="text-center mb-4">
+      <h2 style="color: #cd163f; font-weight: bold;">Welcome Back</h2>
+      <p class="text-muted">Please sign in to continue</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="form-floating mb-3">
+        <input id="idEmail" type="email" class="form-control input-control" placeholder="name@example.com" formControlName="email" />
+        <label for="idEmail">Email Address</label>
+      </div>
+
+      <div class="form-floating mb-4">
+        <input id="idPassword" type="password" class="form-control input-control" placeholder="Password" formControlName="password" />
+        <label for="idPassword">Password</label>
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger" role="alert">{{ errorMessage }}</div>
+      }
+
+      <div class="d-grid gap-2 mt-4">
+        <button class="btn btn-custom w-100 py-2" type="submit" [disabled]="isSubmitting">
+          {{ isSubmitting ? 'Signing In...' : 'Sign In' }}
+        </button>
+        <a routerLink="/" class="btn btn-outline-secondary w-100 py-2">Go back</a>
+      </div>
+    </form>
+  </div>
+</div>

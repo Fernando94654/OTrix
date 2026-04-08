@@ -1,0 +1,69 @@
+@font-face {
+	font-family: 'Google-sans';
+	src: url('/fonts/static/GoogleSans-Regular.ttf') format('truetype');
+}
+
+html,
+body {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	background: #cd163f;
+	font-family: 'Google-sans', Arial, sans-serif;
+}
+
+.app-page {
+	min-height: 100vh;
+}
+
+.btn-custom {
+	color: whitesmoke;
+	font-weight: 600;
+	width: 80%;
+	max-width: 300px;
+	letter-spacing: 1px;
+	background-color: #cd163f;
+	border: none;
+	border-radius: 8px;
+	transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+	background-color: #a51233;
+	transform: translateY(-2px);
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+
+.logo-empresa {
+	width: 70%;
+	height: auto;
+}
+
+.contenedor-botones {
+	margin-top: 20px;
+}
+
+.input-control {
+	background-color: #f8f9fa;
+	color: #333;
+	border: 1px solid #ced4da;
+	border-radius: 8px;
+}
+
+.input-control:focus {
+	background-color: #ffffff;
+	border-color: #cd163f;
+	box-shadow: 0 0 0 0.25rem rgba(205, 22, 63, 0.25);
+	outline: none;
+}
+
+.bloque {
+	background-color: whitesmoke;
+	width: 90%;
+	max-width: 400px;
+	border-radius: 16px;
+	box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
