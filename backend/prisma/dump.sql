@@ -81,15 +81,6 @@ ON level_played(user_id);
 
 CREATE INDEX idx_lp_level
 ON level_played(level_id);
-
--- TABLE: api_key
-CREATE TABLE api_key (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
-    key_hash TEXT NOT NULL,
-    is_active BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
  
 -- INSERT TEST DATA
 
@@ -139,9 +130,3 @@ VALUES
     2,
     200
 );
-
--- API Keys
-INSERT INTO api_key (name, key_hash)
-VALUES
-('internal_service', 'hashed_key_123'),
-('mobile_app', 'hashed_key_456');

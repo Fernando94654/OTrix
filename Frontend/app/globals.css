@@ -1,0 +1,276 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+@font-face {
+  font-family: 'Google-sans';
+  src: url('/fonts/static/GoogleSans-Regular.ttf') format('truetype');
+}
+
+:root {
+  --brand-primary: #cd163f;
+  --brand-primary-dark: #a51233;
+  --brand-ink: #11131a;
+  --brand-surface: #f6f7fb;
+  --brand-border: #dcdfea;
+  --shell-max-width: 1160px;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255, 255, 255, 0.28), transparent 35%),
+    radial-gradient(circle at 95% 90%, rgba(255, 255, 255, 0.22), transparent 32%),
+    var(--brand-primary);
+  font-family: 'Google-sans', Arial, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+.app-shell-container {
+  width: min(var(--shell-max-width), calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.app-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell__content {
+  flex: 1;
+}
+
+.app-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  background: rgba(17, 19, 26, 0.78);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.app-navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+}
+
+.app-brand__logo {
+  height: 42px;
+  width: auto;
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.app-nav a {
+  color: #ffffff;
+  padding: 0.5rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  opacity: 0.9;
+  transition: all 0.2s ease;
+}
+
+.app-nav a:hover,
+.app-nav a.is-active {
+  background: rgba(255, 255, 255, 0.15);
+  opacity: 1;
+}
+
+.app-nav__cta {
+  background: #ffffff;
+  color: var(--brand-primary-dark) !important;
+  font-weight: 700;
+}
+
+.app-nav__cta:hover,
+.app-nav__cta.is-active {
+  background: #ffe4ea !important;
+}
+
+.app-footer {
+  background: rgba(17, 19, 26, 0.86);
+  color: #ffffff;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.5rem 0;
+}
+
+.app-footer__inner {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.app-footer__title {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.app-footer__text,
+.app-footer__copyright {
+  margin: 0;
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.app-page {
+  min-height: 100vh;
+  padding-block: 1.5rem;
+}
+
+.btn-custom {
+  color: whitesmoke;
+  font-weight: 600;
+  width: 80%;
+  max-width: 300px;
+  letter-spacing: 1px;
+  background-color: #cd163f;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: var(--brand-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  color: white;
+}
+
+.input-control {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+}
+
+.input-control:focus {
+  background-color: #ffffff;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 0.25rem rgba(205, 22, 63, 0.25);
+  outline: none;
+}
+
+.panel-card {
+  background-color: whitesmoke;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 16px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.home-card {
+  max-width: 400px;
+}
+
+.home-brand-logo {
+  width: 70%;
+  height: auto;
+}
+
+.home-menu-buttons {
+  margin-top: 20px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 450px;
+}
+
+.login-title,
+.signup-title,
+.stats-title,
+.videogame-title {
+  color: #cd163f;
+  font-weight: 700;
+}
+
+.signup-card {
+  width: 100%;
+  max-width: 600px;
+}
+
+.stats-card {
+  width: 100%;
+  max-width: 640px;
+}
+
+.videogame-card {
+  width: 100%;
+  max-width: 700px;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  max-width: none;
+}
+
+.password-field {
+  position: relative;
+}
+
+.password-input {
+  padding-right: 2.75rem;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #6c757d;
+  z-index: 5;
+}
+
+.password-toggle:hover {
+  color: #cd163f;
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid rgba(205, 22, 63, 0.4);
+  border-radius: 50%;
+}
+
+.password-toggle svg {
+  width: 1.1rem;
+  height: 1.1rem;
+  fill: currentColor;
+}
+
+@media (max-width: 768px) {
+  .app-brand__logo {
+    height: 36px;
+  }
+
+  .app-nav {
+    justify-content: flex-start;
+  }
+
+  .app-nav a {
+    font-size: 0.9rem;
+  }
+}
