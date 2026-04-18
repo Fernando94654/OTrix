@@ -1,13 +1,26 @@
+import React from "react";
+import { Unity, useUnityContext } from "react-unity-webgl";
 import Link from 'next/link';
 
 export default function VideogamePage() {
+  // Configuración de los archivos que moviste a /public/unity/Build
+  const { unityProvider } = useUnityContext({
+    loaderUrl: "/unity/Build/juego2.loader.js", // CAMBIA "tu-archivo" por el nombre real
+    dataUrl: "/unity/Build/tu-archivo.data",
+    frameworkUrl: "/unity/Build/tu-archivo.framework.js",
+    codeUrl: "/unity/Build/tu-archivo.wasm",
+  });
+
   return (
-    <div className='container app-page d-flex justify-content-center align-items-center'>
+    <div className='container app-page d-flex flex-column justify-content-center align-items-center' style={{ minHeight: '100vh' }}>
       <div className='panel-card videogame-card p-4 bg-white shadow-lg rounded text-center'>
         <h2 className='videogame-title mb-3'>Videogame</h2>
-        <p className='text-muted mb-4'>
-          Login and signup are now migrated to Angular. You can integrate the Unity game or a web launcher here.
-        </p>
+        
+        {/* Contenedor del Juego */}
+        <div className="unity-wrapper mb-4" style={{ border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
+          <Unity unityProvider={unityProvider} style={{ width: "800px", height: "600px" }} />
+        </div>
+
         <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
           <Link href='/stats' className='btn btn-outline-secondary px-4'>
             View stats
