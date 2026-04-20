@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Unity, useUnityContext } from "react-unity-webgl";
 import Link from 'next/link';
@@ -6,9 +8,9 @@ export default function VideogamePage() {
   // Configuración de los archivos que moviste a /public/unity/Build
   const { unityProvider } = useUnityContext({
     loaderUrl: "/unity/Build/juego2.loader.js", // CAMBIA "tu-archivo" por el nombre real
-    dataUrl: "/unity/Build/tu-archivo.data",
-    frameworkUrl: "/unity/Build/tu-archivo.framework.js",
-    codeUrl: "/unity/Build/tu-archivo.wasm",
+    dataUrl: "/unity/Build/juego2.data",
+    frameworkUrl: "/unity/Build/juego2.framework.js",
+    codeUrl: "/unity/Build/juego2.wasm",
   });
 
   return (
@@ -18,7 +20,7 @@ export default function VideogamePage() {
         
         {/* Contenedor del Juego */}
         <div className="unity-wrapper mb-4" style={{ border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
-          <Unity unityProvider={unityProvider} style={{ width: "800px", height: "600px" }} />
+          <Unity unityProvider={unityProvider} style={{ width: "500px", height: "400px" }} />
         </div>
 
         <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
