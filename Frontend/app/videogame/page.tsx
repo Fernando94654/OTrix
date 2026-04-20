@@ -19,8 +19,15 @@ export default function VideogamePage() {
         <h2 className='videogame-title mb-3'>Videogame</h2>
         
         {/* Contenedor del Juego */}
-        <div className="unity-wrapper mb-4" style={{ border: '1px solid #ccc', borderRadius: '8px', overflow: 'hidden' }}>
-          <Unity unityProvider={unityProvider} style={{ width: "500px", height: "400px" }} />
+        <div className="unity-wrapper mb-4" style={{ width: "100%", 
+          maxWidth: "960px", 
+          margin: "0 auto", // Esto centra el juego
+          aspectRatio: "16 / 9", 
+          border: '1px solid #ccc', 
+          borderRadius: '8px', 
+          overflow: 'hidden', 
+          backgroundColor: '#f000'}}>
+          <Unity unityProvider={unityProvider} style={{ width: "100%", height: "100%" }} /> 
         </div>
 
         <div className='d-grid gap-2 d-md-flex justify-content-md-center'>
