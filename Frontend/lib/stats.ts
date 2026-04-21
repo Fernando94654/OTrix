@@ -7,7 +7,8 @@ import type {
   PlayerStatsPayload
 } from '@/types/stats';
 
-const defaultApiUrl = 'https://otrix-dev.up.railway.app';
+// const defaultApiUrl = 'https://otrix-dev.up.railway.app';
+const defaultApiUrl = 'http://localhost:3000';
 
 function getBaseUrl() {
   const configured = process.env.NEXT_PUBLIC_API_URL?.trim();
@@ -15,10 +16,19 @@ function getBaseUrl() {
   return baseUrl.replace(/\/+$/, '');
 }
 
-export async function getPlayerStats({ forceDemo = false }: { forceDemo?: boolean } = {}): Promise<PlayerStatsPayload> {
-  if (forceDemo) return mockPlayerStats();
+interface FetchOpts {
+  forceDemo?: boolean;
+  token?: string | null;
+}
+
+function authHeaders(token?: string | null) {
+  return token ? { Authorization: `Bearer ${token}` } : undefined;
+}
+
+export async function getPlayerStats({ forceDemo = false, token }: FetchOpts = {}): Promise<PlayerStatsPayload> {
+  if (forceDemo || !token) return mockPlayerStats();
   try {
-    const response = await fetch(`${getBaseUrl()}/stats/me`, { cache: 'no-store' });
+    const response = await fetch(`${getBaseUrl()}/stats/me`, { cache: 'no-store', headers: authHeaders(token) });
     if (!response.ok) return mockPlayerStats();
     const data = (await response.json()) as Partial<PlayerStatsPayload>;
     if (!data || !Array.isArray(data.recentPlays) || data.recentPlays.length === 0) {
@@ -30,10 +40,10 @@ export async function getPlayerStats({ forceDemo = false }: { forceDemo?: boolea
   }
 }
 
-export async function getAdminStats({ forceDemo = false }: { forceDemo?: boolean } = {}): Promise<AdminStatsPayload> {
-  if (forceDemo) return mockAdminStats();
+export async function getAdminStats({ forceDemo = false, token }: FetchOpts = {}): Promise<AdminStatsPayload> {
+  if (forceDemo || !token) return mockAdminStats();
   try {
-    const response = await fetch(`${getBaseUrl()}/admin/stats/summary`, { cache: 'no-store' });
+    const response = await fetch(`${getBaseUrl()}/admin/stats/summary`, { cache: 'no-store', headers: authHeaders(token) });
     if (!response.ok) return mockAdminStats();
     const data = (await response.json()) as Partial<AdminStatsPayload>;
     if (!data || !data.platform || !Array.isArray(data.companies)) {

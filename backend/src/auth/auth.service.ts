@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignInDto } from './dto/signInDto.js';
-import { SignUpDto} from './dto/signUpDto.js';
+import { SignUpDto } from './dto/signUpDto.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { Role } from '../../generated/prisma/client.js';
 import bcrypt from 'bcrypt';
@@ -13,27 +13,26 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
+    private signToken(user: { id: string; email: string; role: Role }) {
+        return this.jwtService.sign(
+            { sub: user.id, email: user.email, role: user.role },
+            { expiresIn: '7d' }
+        );
+    }
+
     async signIn(signInDto: SignInDto) {
         const user = await this.prisma.user.findUnique({
             where: { email: signInDto.email },
         });
-
-        if (!user) {
+        if (!user || !(await bcrypt.compare(signInDto.password, user.password))) {
             throw new BadRequestException('Invalid email or password');
         }
 
-        const isMatch = await bcrypt.compare(signInDto.password, user.password);
-
-        if (!isMatch) {
-            throw new BadRequestException('Invalid email or password');
-        }
-
-        const payload = { email: user.email, sub: user.id };
-        const refresh_token = this.jwtService.sign(payload, {
-            expiresIn: '7d',
-        });
-
-        return { refresh_token: refresh_token };
+        return {
+            refresh_token: this.signToken(user),
+            role: user.role,
+            user_id: user.id,
+        };
     }
 
     async signUp(signUpDto: SignUpDto) {
@@ -41,14 +40,14 @@ export class AuthService {
             throw new BadRequestException('Invalid request body: password is required');
         }
 
-        const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
-        // Verify unique email
         const existingUser = await this.prisma.user.findUnique({
             where: { email: signUpDto.email },
         });
         if (existingUser) {
             throw new BadRequestException('Email already in use');
         }
+
+        const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
         const user = await this.prisma.user.create({
             data: {
                 name: signUpDto.name,
@@ -59,31 +58,20 @@ export class AuthService {
                 gender: signUpDto.gender,
                 role: Role.USER,
                 company_id: signUpDto.company,
+                created_at: new Date(),
             },
-            select: {
-                id: true,
-                email: true,
-                name: true,
-                last_name: true,
-                birthday: true,
-                gender: true,
-                company_id: true,
-            }
         });
 
-        const payload = { email: user.email, sub: user.id };
-
-        const refreshToken = this.jwtService.sign(payload, {
-            expiresIn: '7d',
-        });
-
-        this.prisma.session.create({
+        const refresh_token = this.signToken(user);
+        await this.prisma.session.create({
             data: {
                 user_id: user.id,
-                refresh_token: refreshToken,
+                refresh_token,
                 refresh_token_expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            }
+                created_at: new Date(),
+            },
         });
-        return { ...user, refresh_token: refreshToken };
+
+        return { refresh_token, role: user.role, user_id: user.id };
     }
 }

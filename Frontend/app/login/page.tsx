@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { saveToken, signIn } from '@/lib/auth';
+import { saveRole, saveToken, signIn } from '@/lib/auth';
 import { notifyError, notifyInfo, notifySuccess } from '@/lib/notifications';
 
 function isEmailValid(email: string) {
@@ -32,6 +32,7 @@ export default function LoginPage() {
     try {
       const response = await signIn({ email, password });
       saveToken(response.refresh_token);
+      if (response.role) saveRole(response.role);
       notifySuccess('Welcome back! You are now signed in.');
       router.push('/videogame');
     } catch {

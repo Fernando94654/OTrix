@@ -15,4 +15,6 @@ export interface SignUpPayload {
 
 export interface AuthResponse {
   refresh_token: string;
+  role?: 'USER' | 'ADMIN';
+  user_id?: string;
 }

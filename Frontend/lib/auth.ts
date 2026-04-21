@@ -1,6 +1,7 @@
 import type { AuthResponse, SignInPayload, SignUpPayload } from '@/types/auth';
 
-const defaultApiUrl = 'https://otrix-dev.up.railway.app';
+// const defaultApiUrl = 'https://otrix-dev.up.railway.app';
+const defaultApiUrl = 'http://localhost:3000';
 
 function getBaseUrl() {
   const configured = process.env.NEXT_PUBLIC_API_URL?.trim();
@@ -36,6 +37,11 @@ export function saveToken(token: string) {
   if (typeof window !== 'undefined') {
     window.localStorage.setItem('token', token);
   }
+}
+
+export function getToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return window.localStorage.getItem('token');
 }
 
 export type UserRole = 'USER' | 'ADMIN';

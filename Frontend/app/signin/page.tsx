@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
-import { saveToken, signUp } from '@/lib/auth';
+import { saveRole, saveToken, signUp } from '@/lib/auth';
 import { notifyError, notifyInfo, notifySuccess } from '@/lib/notifications';
 import type { SignUpPayload } from '@/types/auth';
 
@@ -67,6 +67,7 @@ export default function SignupPage() {
     try {
       const response = await signUp(payload);
       saveToken(response.refresh_token);
+      if (response.role) saveRole(response.role);
       notifySuccess('Account created successfully. Welcome to Otrix!');
       router.push('/videogame');
     } catch {

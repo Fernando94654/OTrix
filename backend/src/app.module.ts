@@ -8,22 +8,24 @@ import { ClientsModule } from './clients/clients.module.js';
 import { SessionsModule } from './sessions/sessions.module.js';
 import { LevelModule } from './level/level.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { StatsModule } from './stats/stats.module.js';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     ThrottlerModule.forRoot([{
-      ttl: 60000, 
+      ttl: 60000,
       limit: 20,
     }]),
-    PrismaModule, 
-    UsersModule, 
-    LevelPlayedModule, 
-    ClientsModule, 
-    SessionsModule, 
-    LevelModule, 
-    AuthModule
+    PrismaModule,
+    UsersModule,
+    LevelPlayedModule,
+    ClientsModule,
+    SessionsModule,
+    LevelModule,
+    AuthModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [
