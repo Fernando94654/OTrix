@@ -37,3 +37,24 @@ export function saveToken(token: string) {
     window.localStorage.setItem('token', token);
   }
 }
+
+export type UserRole = 'USER' | 'ADMIN';
+
+export function saveRole(role: UserRole) {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('role', role);
+  }
+}
+
+export function getRole(): UserRole | null {
+  if (typeof window === 'undefined') return null;
+  const role = window.localStorage.getItem('role');
+  return role === 'ADMIN' || role === 'USER' ? role : null;
+}
+
+export function clearSession() {
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem('token');
+    window.localStorage.removeItem('role');
+  }
+}
