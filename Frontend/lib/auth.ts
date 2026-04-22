@@ -58,9 +58,58 @@ export function getRole(): UserRole | null {
   return role === 'ADMIN' || role === 'USER' ? role : null;
 }
 
+export function saveName(name: string, lastName?: string) {
+  if (typeof window === 'undefined') return;
+  if (name) window.localStorage.setItem('name', name);
+  if (lastName) window.localStorage.setItem('last_name', lastName);
+}
+
+function formatName(name: string, lastName?: string | null) {
+  const initial = lastName && lastName.length > 0 ? ` ${lastName.charAt(0).toUpperCase()}.` : '';
+  return `${name}${initial}`;
+}
+
+export function getDisplayName(): string | null {
+  if (typeof window === 'undefined') return null;
+
+  const storedName = window.localStorage.getItem('name');
+  if (storedName) {
+    return formatName(storedName, window.localStorage.getItem('last_name'));
+  }
+
+  const token = window.localStorage.getItem('token');
+  if (!token) return null;
+
+  try {
+    const payload = token.split('.')[1];
+    if (!payload) return null;
+    const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const data = JSON.parse(atob(normalized)) as { name?: unknown; last_name?: unknown; email?: unknown };
+
+    if (typeof data.name === 'string' && data.name.length > 0) {
+      const last = typeof data.last_name === 'string' ? data.last_name : null;
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem('name', data.name);
+        if (last) window.localStorage.setItem('last_name', last);
+      }
+      return formatName(data.name, last);
+    }
+
+    if (typeof data.email === 'string') {
+      return data.email.split('@')[0];
+    }
+  } catch {
+    return null;
+  }
+
+  return null;
+}
+
 export function clearSession() {
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem('token');
     window.localStorage.removeItem('role');
+    window.localStorage.removeItem('name');
+    window.localStorage.removeItem('last_name');
   }
 }

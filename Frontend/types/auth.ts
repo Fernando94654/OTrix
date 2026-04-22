@@ -17,4 +17,6 @@ export interface AuthResponse {
   refresh_token: string;
   role?: 'USER' | 'ADMIN';
   user_id?: string;
+  name?: string;
+  last_name?: string;
 }

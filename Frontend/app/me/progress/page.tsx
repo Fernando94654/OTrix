@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import PlayerDashboard from './PlayerDashboard';
+import StatsLoader from '@/app/components/stats-loader';
 import { getPlayerStats } from '@/lib/stats';
 import { getToken } from '@/lib/auth';
 import type { PlayerStatsPayload } from '@/types/stats';
@@ -19,10 +20,10 @@ export default function PlayerProgressPage() {
   if (!stats) {
     return (
       <div className='container app-page stats-page'>
-        <div className='stats-guard'>
-          <div className='stats-guard-spinner' aria-hidden />
-          <p>Loading your progress…</p>
-        </div>
+        <StatsLoader
+          label='Loading your progress'
+          sublabel='Pulling your session history and performance trends'
+        />
       </div>
     );
   }

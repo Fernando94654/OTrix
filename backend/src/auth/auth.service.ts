@@ -13,9 +13,15 @@ export class AuthService {
         private jwtService: JwtService
     ) {}
 
-    private signToken(user: { id: string; email: string; role: Role }) {
+    private signToken(user: { id: string; email: string; role: Role; name: string; last_name: string }) {
         return this.jwtService.sign(
-            { sub: user.id, email: user.email, role: user.role },
+            {
+                sub: user.id,
+                email: user.email,
+                role: user.role,
+                name: user.name,
+                last_name: user.last_name,
+            },
             { expiresIn: '7d' }
         );
     }
@@ -32,6 +38,8 @@ export class AuthService {
             refresh_token: this.signToken(user),
             role: user.role,
             user_id: user.id,
+            name: user.name,
+            last_name: user.last_name,
         };
     }
 
@@ -72,6 +80,12 @@ export class AuthService {
             },
         });
 
-        return { refresh_token, role: user.role, user_id: user.id };
+        return {
+            refresh_token,
+            role: user.role,
+            user_id: user.id,
+            name: user.name,
+            last_name: user.last_name,
+        };
     }
 }

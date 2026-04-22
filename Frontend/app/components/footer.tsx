@@ -1,4 +1,15 @@
+'use client';
+
+import { usePathname } from 'next/navigation';
+
+const HIDDEN_ROUTES = ['/videogame'];
+
 export default function Footer() {
+  const pathname = usePathname();
+  if (HIDDEN_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`))) {
+    return null;
+  }
+
   return (
     <footer className='app-footer'>
       <div className='app-shell-container app-footer__inner'>
