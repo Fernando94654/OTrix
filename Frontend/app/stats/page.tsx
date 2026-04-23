@@ -1,34 +1,54 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import AdminDashboard from './AdminDashboard';
 import AdminGuard from './AdminGuard';
 import StatsLoader from '@/app/components/stats-loader';
-import { getAdminStats } from '@/lib/stats';
-import { getToken } from '@/lib/auth';
+import StatsError from '@/app/components/stats-error';
+import { clearSession, getToken } from '@/lib/auth';
+import { getAdminStats, StatsFetchError } from '@/lib/stats';
+import { notifyError } from '@/lib/notifications';
 import type { AdminStatsPayload } from '@/types/stats';
 
+type Status =
+  | { state: 'loading' }
+  | { state: 'ok'; stats: AdminStatsPayload }
+  | { state: 'error'; kind: 'server' | 'network' };
+
 export default function AdminStatsPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const forceDemo = searchParams.get('demo') === '1';
-  const [stats, setStats] = useState<AdminStatsPayload | null>(null);
+  const [status, setStatus] = useState<Status>({ state: 'loading' });
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    getAdminStats({ forceDemo, token: getToken() }).then(setStats);
-  }, [forceDemo]);
+    setStatus({ state: 'loading' });
+    getAdminStats({ forceDemo, token: getToken() })
+      .then((stats) => setStatus({ state: 'ok', stats }))
+      .catch((err: unknown) => {
+        if (err instanceof StatsFetchError && err.kind === 'auth') {
+          clearSession();
+          notifyError('Session expired. Please sign in again.');
+          router.push('/login');
+          return;
+        }
+        const kind = err instanceof StatsFetchError ? err.kind : 'server';
+        setStatus({ state: 'error', kind: kind as 'server' | 'network' });
+      });
+  }, [forceDemo, attempt, router]);
 
   return (
     <div className='container app-page stats-page'>
       <AdminGuard>
-        {stats ? (
-          <AdminDashboard stats={stats} />
-        ) : (
-          <StatsLoader
-            label='Loading analytics'
-            sublabel='Aggregating platform metrics across companies'
-          />
+        {status.state === 'loading' && (
+          <StatsLoader label='Loading analytics' sublabel='Aggregating platform metrics across companies' />
         )}
+        {status.state === 'error' && (
+          <StatsError kind={status.kind} onRetry={() => setAttempt((n) => n + 1)} />
+        )}
+        {status.state === 'ok' && <AdminDashboard stats={status.stats} />}
       </AdminGuard>
     </div>
   );

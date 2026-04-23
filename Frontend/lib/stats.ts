@@ -7,8 +7,8 @@ import type {
   PlayerStatsPayload
 } from '@/types/stats';
 
-// const defaultApiUrl = 'https://otrix-dev.up.railway.app';
-const defaultApiUrl = 'http://localhost:3000';
+const defaultApiUrl = 'https://otrix-dev.up.railway.app';
+// const defaultApiUrl = 'http://localhost:3000';
 
 function getBaseUrl() {
   const configured = process.env.NEXT_PUBLIC_API_URL?.trim();
@@ -21,38 +21,38 @@ interface FetchOpts {
   token?: string | null;
 }
 
-function authHeaders(token?: string | null) {
-  return token ? { Authorization: `Bearer ${token}` } : undefined;
+export type StatsErrorKind = 'auth' | 'server' | 'network';
+
+export class StatsFetchError extends Error {
+  constructor(public kind: StatsErrorKind) {
+    super(kind);
+    this.name = 'StatsFetchError';
+  }
+}
+
+async function fetchLive<T>(path: string, token: string): Promise<T> {
+  let response: Response;
+  try {
+    response = await fetch(`${getBaseUrl()}${path}`, {
+      cache: 'no-store',
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  } catch {
+    throw new StatsFetchError('network');
+  }
+  if (response.status === 401) throw new StatsFetchError('auth');
+  if (!response.ok) throw new StatsFetchError('server');
+  return (await response.json()) as T;
 }
 
 export async function getPlayerStats({ forceDemo = false, token }: FetchOpts = {}): Promise<PlayerStatsPayload> {
   if (forceDemo || !token) return mockPlayerStats();
-  try {
-    const response = await fetch(`${getBaseUrl()}/stats/me`, { cache: 'no-store', headers: authHeaders(token) });
-    if (!response.ok) return mockPlayerStats();
-    const data = (await response.json()) as Partial<PlayerStatsPayload>;
-    if (!data || !Array.isArray(data.recentPlays) || data.recentPlays.length === 0) {
-      return mockPlayerStats();
-    }
-    return { ...mockPlayerStats(), ...data, source: 'live' };
-  } catch {
-    return mockPlayerStats();
-  }
+  return fetchLive<PlayerStatsPayload>('/stats/me', token);
 }
 
 export async function getAdminStats({ forceDemo = false, token }: FetchOpts = {}): Promise<AdminStatsPayload> {
   if (forceDemo || !token) return mockAdminStats();
-  try {
-    const response = await fetch(`${getBaseUrl()}/admin/stats/summary`, { cache: 'no-store', headers: authHeaders(token) });
-    if (!response.ok) return mockAdminStats();
-    const data = (await response.json()) as Partial<AdminStatsPayload>;
-    if (!data || !data.platform || !Array.isArray(data.companies)) {
-      return mockAdminStats();
-    }
-    return { ...mockAdminStats(), ...data, source: 'live' };
-  } catch {
-    return mockAdminStats();
-  }
+  return fetchLive<AdminStatsPayload>('/admin/stats/summary', token);
 }
 
 function seeded(seed: number) {

@@ -1,7 +1,7 @@
 import type { AuthResponse, SignInPayload, SignUpPayload } from '@/types/auth';
 
-// const defaultApiUrl = 'https://otrix-dev.up.railway.app';
-const defaultApiUrl = 'http://localhost:3000';
+const defaultApiUrl = 'https://otrix-dev.up.railway.app';
+// const defaultApiUrl = 'http://localhost:3000';
 
 function getBaseUrl() {
   const configured = process.env.NEXT_PUBLIC_API_URL?.trim();

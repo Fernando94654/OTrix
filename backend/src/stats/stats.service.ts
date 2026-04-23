@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 type Difficulty = 'Easy' | 'Medium' | 'Hard' | 'Insane';
@@ -25,9 +25,12 @@ function emptyDays(n: number): Map<string, { total: number; count: number }> {
 
 @Injectable()
 export class StatsService {
+    private readonly logger = new Logger(StatsService.name);
+
     constructor(private prisma: PrismaService) {}
 
     async getPlayerStats(userId: string) {
+        const start = Date.now();
         const [user, plays, levels, globalLeaderboard] = await Promise.all([
             this.prisma.user.findUnique({ where: { id: userId }, select: { id: true, name: true, last_name: true } }),
             this.prisma.levelPlayed.findMany({
@@ -84,6 +87,8 @@ export class StatsService {
             else if (a <= 3) attempts.mid++;
             else if (a > 0) attempts.many++;
         }
+
+        this.logger.log(`player stats · user=${userId} plays=${plays.length} ms=${Date.now() - start}`);
 
         return {
             source: 'live' as const,

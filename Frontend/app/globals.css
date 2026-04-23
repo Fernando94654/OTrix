@@ -2552,3 +2552,10 @@ body:has(.videogame-stage) {
   flex-shrink: 0;
 }
 
+/* Empty state for player dashboard */
+.stats-empty__cta {
+  display: flex;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem) 1rem clamp(2.5rem, 6vw, 5rem);
+}
+
