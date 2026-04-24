@@ -1,15 +1,31 @@
-"use client";
+'use client';
 
-import React from "react";
-import { Unity, useUnityContext } from "react-unity-webgl";
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Unity, useUnityContext } from 'react-unity-webgl';
+import { getToken } from '@/lib/auth';
+
+const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? '').trim() || 'https://otrix-dev.up.railway.app';
 
 export default function VideogamePage() {
-  const { unityProvider, isLoaded, loadingProgression } = useUnityContext({
-    loaderUrl: "/unity/Build/juego2.loader.js",
-    dataUrl: "/unity/Build/juego2.data",
-    frameworkUrl: "/unity/Build/juego2.framework.js",
-    codeUrl: "/unity/Build/juego2.wasm",
+  const router = useRouter();
+  const { unityProvider, isLoaded, loadingProgression, sendMessage } = useUnityContext({
+    loaderUrl: '/unity/Build/buildwebGL.loader.js',
+    dataUrl: '/unity/Build/buildwebGL.data',
+    frameworkUrl: '/unity/Build/buildwebGL.framework.js',
+    codeUrl: '/unity/Build/buildwebGL.wasm',
   });
+
+  useEffect(() => {
+    if (!getToken()) router.replace('/login');
+  }, [router]);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    const token = getToken();
+    if (!token) return;
+    sendMessage('GameBridge', 'SetSession', JSON.stringify({ token, apiUrl: API_URL }));
+  }, [isLoaded, sendMessage]);
 
   const progressPct = Math.round(loadingProgression * 100);
   const stageLabel =
