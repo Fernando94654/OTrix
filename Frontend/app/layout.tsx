@@ -5,7 +5,7 @@ import ToasterProvider from './components/toaster-provider';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Otrix',
+  title: 'OTrix',
   description: 'Learning, security awareness and game simulation platform.'
 };
 

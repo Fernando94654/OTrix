@@ -77,7 +77,7 @@ export default function SignupPage() {
       saveToken(response.refresh_token);
       if (response.role) saveRole(response.role);
       saveName(response.name ?? name, response.last_name ?? lastName);
-      notifySuccess('Account created successfully. Welcome to Otrix!');
+      notifySuccess('Account created successfully. Welcome to OTrix!');
       router.push('/videogame');
     } catch {
       const message = 'Signup error. Please verify your data and try again.';

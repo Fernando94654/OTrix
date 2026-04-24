@@ -4,10 +4,10 @@ export default function HomePage() {
   return (
     <div className='home'>
       <HeroSection />
-      <MetricsStrip />
+      {/* <MetricsStrip /> */}
       <FeaturesSection />
       <HowItWorksSection />
-      <RockwellSection />
+      {/* <RockwellSection /> */}
       <ClosingCta />
     </div>
   );
@@ -28,7 +28,7 @@ function HeroSection() {
           </h1>
           <p className='home-hero__sub'>
             OTrix is an immersive cybersecurity simulation where operators, engineers and
-            analysts sharpen their response to real-world industrial threats — one scenario at a time.
+            analysts sharpen their response to real-world industrial threats, one scenario at a time.
           </p>
           <div className='home-hero__actions'>
             <Link href='/videogame' className='home-btn home-btn--primary'>
@@ -101,7 +101,7 @@ function FeaturesSection() {
         </svg>
       ),
       title: 'Industrial-grade threats',
-      body: 'Scenarios modelled on real incidents — from OT spear-phishing to PLC firmware tampering.'
+      body: 'Scenarios modelled on real incidents, from OT spear-phishing to PLC firmware tampering.'
     },
     {
       icon: (
@@ -119,7 +119,7 @@ function FeaturesSection() {
         </svg>
       ),
       title: 'Ready in a browser',
-      body: 'Powered by WebGL. No installs, no IT tickets — just a URL and your workforce is training.'
+      body: 'Powered by WebGL. No installs, no IT tickets, just a URL and your workforce is training.'
     }
   ];
 
@@ -130,7 +130,7 @@ function FeaturesSection() {
           <span className='home-section__eyebrow'>Why OTrix</span>
           <h2 className='home-section__title'>Built for the people who keep the plant running.</h2>
           <p className='home-section__sub'>
-            A training platform engineered around the reality of industrial operations — not a generic
+            A training platform engineered around the reality of industrial operations, not a generic
             corporate LMS with a cyber chapter bolted on.
           </p>
         </header>
@@ -164,7 +164,7 @@ function HowItWorksSection() {
     {
       num: '03',
       title: 'Track your evolution',
-      body: 'Review your score trend, attempt distribution and completion rate — and see how your org stacks up.'
+      body: 'Review your score trend, attempt distribution and completion rate and see how your org stacks up.'
     }
   ];
 
@@ -208,7 +208,7 @@ function RockwellSection() {
             simulation can be used for cybersecurity awareness in industrial environments.
           </p>
           <p className='home-section__sub home-rockwell__note'>
-            This is an early work-in-progress build — scenarios, content and dashboards are
+            This is an early work-in-progress build, scenarios, content and dashboards are
             actively being designed.
           </p>
         </div>

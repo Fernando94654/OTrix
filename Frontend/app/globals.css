@@ -81,61 +81,100 @@ a {
   position: sticky;
   top: 0;
   z-index: 1000;
-  backdrop-filter: blur(10px);
-  background: rgba(17, 19, 26, 0.78);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0f1117;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow: hidden;
 }
 
 .app-navbar__inner {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.75rem 0;
+  min-height: 64px;
+  padding: 0;
+}
+
+.app-brand {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 3rem 0 0;
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+.app-brand::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: -100vw;
+  background: #ffffff;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 40px) 100%, 0 100%);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  z-index: -1;
+  transition: clip-path 0.25s ease;
+}
+
+.app-brand:hover::before {
+  clip-path: polygon(0 0, 100% 0, calc(100% - 52px) 100%, 0 100%);
 }
 
 .app-brand__logo {
-  height: 42px;
+  height: 32px;
   width: auto;
+  display: block;
+  position: relative;
 }
 
 .app-nav {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
+  align-items: center;
   gap: 0.35rem;
+  padding: 0.6rem 0;
 }
 
 .app-nav a {
-  color: #ffffff;
-  padding: 0.5rem 0.8rem;
+  color: rgba(255, 255, 255, 0.78);
+  padding: 0.5rem 0.9rem;
   border-radius: 999px;
   font-size: 0.95rem;
-  opacity: 0.9;
-  transition: all 0.2s ease;
+  font-weight: 500;
+  transition: background-color 0.18s ease, color 0.18s ease;
 }
 
-.app-nav a:hover,
+.app-nav a:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
 .app-nav a.is-active {
-  background: rgba(255, 255, 255, 0.15);
-  opacity: 1;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .app-nav__cta {
-  background: #ffffff;
-  color: var(--brand-primary-dark) !important;
+  background: var(--brand-primary-dark) !important;
+  color: #ffffff !important;
   font-weight: 700;
+  box-shadow: 0 1px 2px rgba(165, 18, 51, 0.3), 0 4px 12px rgba(165, 18, 51, 0.2);
 }
 
 .app-nav__cta:hover,
 .app-nav__cta.is-active {
-  background: #ffe4ea !important;
+  background: var(--brand-primary) !important;
+  color: #ffffff !important;
 }
 
 .app-user {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   margin-left: 0.35rem;
 }
 
@@ -145,8 +184,8 @@ a {
   gap: 0.5rem;
   padding: 0.4rem 0.9rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #ffffff;
   font-weight: 600;
   font-size: 0.9rem;
@@ -188,8 +227,8 @@ a {
 }
 
 .app-user__logout:hover {
-  background: rgba(205, 22, 63, 0.15);
-  border-color: rgba(205, 22, 63, 0.4);
+  background: rgba(205, 22, 63, 0.2);
+  border-color: rgba(205, 22, 63, 0.5);
   color: #ffffff;
 }
 
@@ -400,6 +439,67 @@ body:has(.videogame-stage) {
   text-transform: uppercase;
   font-weight: 600;
   color: #e7ebf5;
+}
+
+.videogame-hud__right {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.videogame-hud__fullscreen {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  color: #e7ebf5;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+.videogame-hud__fullscreen svg {
+  width: 14px;
+  height: 14px;
+}
+
+.videogame-hud__fullscreen:hover {
+  background: rgba(205, 22, 63, 0.18);
+  border-color: rgba(205, 22, 63, 0.45);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.videogame-hud__fullscreen:focus-visible {
+  outline: 2px solid rgba(205, 22, 63, 0.5);
+  outline-offset: 2px;
+}
+
+.videogame-stage:fullscreen {
+  padding: 0;
+  background: #000;
+}
+
+.videogame-stage:fullscreen .videogame-stage__inner {
+  width: 100%;
+  height: 100%;
+  padding: clamp(0.5rem, 1.5vh, 1rem);
+  gap: 0.5rem;
+}
+
+.videogame-stage:fullscreen .videogame-canvas__frame {
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .videogame-hud__dot {

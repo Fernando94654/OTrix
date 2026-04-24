@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Unity, useUnityContext } from 'react-unity-webgl';
 import { getToken } from '@/lib/auth';
@@ -9,6 +9,8 @@ const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? '').trim() || 'https://otrix
 
 export default function VideogamePage() {
   const router = useRouter();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const { unityProvider, isLoaded, loadingProgression, sendMessage } = useUnityContext({
     loaderUrl: '/unity/Build/buildwebGL.loader.js',
     dataUrl: '/unity/Build/buildwebGL.data',
@@ -27,6 +29,20 @@ export default function VideogamePage() {
     sendMessage('GameBridge', 'SetSession', JSON.stringify({ token, apiUrl: API_URL }));
   }, [isLoaded, sendMessage]);
 
+  useEffect(() => {
+    const onChange = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      stageRef.current?.requestFullscreen().catch(() => {});
+    } else {
+      document.exitFullscreen().catch(() => {});
+    }
+  }
+
   const progressPct = Math.round(loadingProgression * 100);
   const stageLabel =
     progressPct < 10 ? 'Initializing runtime'
@@ -36,7 +52,7 @@ export default function VideogamePage() {
     : 'Ready';
 
   return (
-    <div className="videogame-stage">
+    <div className="videogame-stage" ref={stageRef}>
       <div className="videogame-stage__inner">
         <header className="videogame-hud">
           <div className="videogame-hud__left">
@@ -47,6 +63,24 @@ export default function VideogamePage() {
               <span className="videogame-hud__dot" />
               {isLoaded ? 'Session live' : `Loading ${progressPct}%`}
             </span>
+            <button
+              type="button"
+              className="videogame-hud__fullscreen"
+              onClick={toggleFullscreen}
+              aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+              aria-pressed={isFullscreen}
+            >
+              {isFullscreen ? (
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 4v5H4M20 9h-5V4M4 15h5v5M15 15h5v5" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+              <span>{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
+            </button>
           </div>
         </header>
 

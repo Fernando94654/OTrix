@@ -38,7 +38,7 @@ export default function PlayerDashboard({ stats }: Props) {
           <p className='stats-eyebrow'>OTrix · My progress</p>
           <h1 className='stats-hero-title'>Your performance at a glance</h1>
           <p className='stats-hero-sub'>
-            Scores, streaks and level mastery — updated {new Date(stats.generated_at).toLocaleString()}.
+            Scores, streaks and level mastery updated {new Date(stats.generated_at).toLocaleString()}.
           </p>
         </div>
         <div className='stats-header-actions'>
