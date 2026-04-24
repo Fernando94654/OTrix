@@ -23,7 +23,7 @@ function formatTime(seconds: number) {
 }
 
 export default function PlayerDashboard({ stats }: Props) {
-  const { totals, scoreTrend, levelPerformance, attemptsDistribution, recentPlays, leaderboard } = stats;
+  const { totals, scoreTrend, levelPerformance, attemptsDistribution, recentPlays } = stats;
 
   if (stats.source === 'live' && totals.plays === 0) {
     return <PlayerEmptyState />;

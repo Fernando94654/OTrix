@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import AdminDashboard from './AdminDashboard';
 import AdminGuard from './AdminGuard';
@@ -16,7 +16,7 @@ type Status =
   | { state: 'ok'; stats: AdminStatsPayload }
   | { state: 'error'; kind: 'server' | 'network' };
 
-export default function AdminStatsPage() {
+function AdminStatsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const forceDemo = searchParams.get('demo') === '1';
@@ -40,16 +40,24 @@ export default function AdminStatsPage() {
   }, [forceDemo, attempt, router]);
 
   return (
+    <AdminGuard>
+      {status.state === 'loading' && (
+        <StatsLoader label='Loading analytics' sublabel='Aggregating platform metrics across companies' />
+      )}
+      {status.state === 'error' && (
+        <StatsError kind={status.kind} onRetry={() => setAttempt((n) => n + 1)} />
+      )}
+      {status.state === 'ok' && <AdminDashboard stats={status.stats} />}
+    </AdminGuard>
+  );
+}
+
+export default function AdminStatsPage() {
+  return (
     <div className='container app-page stats-page'>
-      <AdminGuard>
-        {status.state === 'loading' && (
-          <StatsLoader label='Loading analytics' sublabel='Aggregating platform metrics across companies' />
-        )}
-        {status.state === 'error' && (
-          <StatsError kind={status.kind} onRetry={() => setAttempt((n) => n + 1)} />
-        )}
-        {status.state === 'ok' && <AdminDashboard stats={status.stats} />}
-      </AdminGuard>
+      <Suspense fallback={<StatsLoader label='Loading analytics' />}>
+        <AdminStatsContent />
+      </Suspense>
     </div>
   );
 }

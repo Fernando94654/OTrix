@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PlayerDashboard from './PlayerDashboard';
 import StatsLoader from '@/app/components/stats-loader';
@@ -15,7 +15,7 @@ type Status =
   | { state: 'ok'; stats: PlayerStatsPayload }
   | { state: 'error'; kind: 'server' | 'network' };
 
-export default function PlayerProgressPage() {
+function PlayerProgressContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const forceDemo = searchParams.get('demo') === '1';
@@ -39,7 +39,7 @@ export default function PlayerProgressPage() {
   }, [forceDemo, attempt, router]);
 
   return (
-    <div className='container app-page stats-page'>
+    <>
       {status.state === 'loading' && (
         <StatsLoader label='Loading your progress' sublabel='Pulling your session history and performance trends' />
       )}
@@ -47,6 +47,16 @@ export default function PlayerProgressPage() {
         <StatsError kind={status.kind} onRetry={() => setAttempt((n) => n + 1)} />
       )}
       {status.state === 'ok' && <PlayerDashboard stats={status.stats} />}
+    </>
+  );
+}
+
+export default function PlayerProgressPage() {
+  return (
+    <div className='container app-page stats-page'>
+      <Suspense fallback={<StatsLoader label='Loading your progress' />}>
+        <PlayerProgressContent />
+      </Suspense>
     </div>
   );
 }
