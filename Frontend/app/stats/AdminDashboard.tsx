@@ -36,12 +36,6 @@ export default function AdminDashboard({ stats }: Props) {
         </div>
       </header>
 
-      {stats.source === 'demo' && (
-        <div className='stats-demo-banner' role='status'>
-          Showing sample data. Connect the backend endpoint <code>/admin/stats/summary</code> to see real platform metrics.
-        </div>
-      )}
-
       <section className='stats-kpi-grid'>
         <KpiCard label='Total users' value={platform.total_users} accent='#60a5fa' hint={`+${platform.new_users_7d} new this week`} />
         <KpiCard label='Active 7d' value={platform.active_7d} accent='#ff6a88' hint={`${stickiness(platform.active_7d, platform.active_30d)}% stickiness`} />

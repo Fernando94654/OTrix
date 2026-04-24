@@ -47,12 +47,6 @@ export default function PlayerDashboard({ stats }: Props) {
         </div>
       </header>
 
-      {stats.source === 'demo' && (
-        <div className='stats-demo-banner' role='status'>
-          Showing sample data. Connect the backend endpoint <code>/stats/me</code> to see real gameplay metrics.
-        </div>
-      )}
-
       <section className='stats-kpi-grid'>
         <KpiCard label='Total plays' value={totals.plays} accent='#ff6a88' spark={trendValues} />
         <KpiCard label='Average score' value={totals.avg_score} accent='#60a5fa' spark={trendValues} />
