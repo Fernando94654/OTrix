@@ -145,7 +145,7 @@ export default function AdminDashboard({ stats }: Props) {
           />
         </article>
 
-        <article className='stats-panel'>
+        {/* <article className='stats-panel'>
           <header className='stats-panel-head'>
             <h2>Gender</h2>
             <span>Registered users</span>
@@ -158,9 +158,9 @@ export default function AdminDashboard({ stats }: Props) {
               color: DEMO_COLORS[i % DEMO_COLORS.length]
             }))}
           />
-        </article>
+        </article> */}
 
-        <article className='stats-panel'>
+        {/* <article className='stats-panel'>
           <header className='stats-panel-head'>
             <h2>Age ranges</h2>
             <span>Derived from birthday</span>
@@ -173,7 +173,7 @@ export default function AdminDashboard({ stats }: Props) {
               color: AGE_COLORS[i % AGE_COLORS.length]
             }))}
           />
-        </article>
+        </article> */}
 
       </section>
     </div>
