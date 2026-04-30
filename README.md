@@ -1,5 +1,7 @@
 # OTrix: Industrial Cybersecurity Simulation
 
+*This project was developed for the "Software Construction and Development" class at Tecnológico de Monterrey, in partnership with Rockwell Automation as a training partner.*
+
 OTrix is an immersive training platform designed to sharpen the response of operators, engineers, and analysts to real-world industrial cybersecurity threats. Through a browser-based simulation, users can experience and mitigate attacks in a realistic, gamified factory floor environment.
 
 ![OTrix Gameplay](image.png)
