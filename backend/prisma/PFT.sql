@@ -1,4 +1,4 @@
--- Trigger 1: Actualiza récords después de cada partida
+-- Trigger 1: Update records after each play
 CREATE OR REPLACE FUNCTION fn_sync_stats() RETURNS TRIGGER AS $$
 BEGIN
     INSERT INTO user_level_stats (user_id, level_id, best_score, best_time, total_attempts, last_played)
@@ -15,7 +15,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER tr_sync_stats AFTER INSERT ON level_played 
 FOR EACH ROW EXECUTE FUNCTION fn_sync_stats();
 
--- Trigger 2: Verifica existencia de empresa al crear usuario
+-- Trigger 2: Verify company exists when creating a user
 CREATE OR REPLACE FUNCTION fn_verify_company() RETURNS TRIGGER AS $$
 BEGIN
     IF NEW.company_id IS NOT NULL AND NOT EXISTS (SELECT 1 FROM companies WHERE id = NEW.company_id) THEN
@@ -28,7 +28,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER tr_verify_company BEFORE INSERT ON users 
 FOR EACH ROW EXECUTE FUNCTION fn_verify_company();
 
--- Trigger 3: Log de cambios en roles de usuario (Seguridad)
+-- Trigger 3: Log changes in user roles (security)
 CREATE OR REPLACE FUNCTION fn_log_role_change() RETURNS TRIGGER AS $$
 BEGIN
     IF OLD.role <> NEW.role THEN
@@ -42,21 +42,21 @@ CREATE TRIGGER tr_log_role_change BEFORE UPDATE ON users
 FOR EACH ROW EXECUTE FUNCTION fn_log_role_change();
 
 
--- Procedure 1: Registro manual de empresas
+-- Procedure 1: Manual company registration
 CREATE OR REPLACE PROCEDURE sp_add_company(p_name VARCHAR) AS $$
 BEGIN
     INSERT INTO companies (id, name) VALUES (gen_random_uuid(), p_name);
 END;
 $$ LANGUAGE plpgsql;
 
--- Procedure 2: Limpieza de sesiones expiradas
+-- Procedure 2: Cleanup of expired sessions
 CREATE OR REPLACE PROCEDURE sp_clean_sessions() AS $$
 BEGIN
     DELETE FROM sessions WHERE refresh_token_expires_at < NOW();
 END;
 $$ LANGUAGE plpgsql;
 
--- Procedure 3: Reset de estadísticas de un nivel
+-- Procedure 3: Reset stats for a level
 CREATE OR REPLACE PROCEDURE sp_reset_level(p_level_id INT) AS $$
 BEGIN
     DELETE FROM user_level_stats WHERE level_id = p_level_id;
@@ -64,14 +64,14 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Función 1: Promedio de intentos por usuario
+-- Function 1: Average attempts per user
 CREATE OR REPLACE FUNCTION fn_get_avg_attempts(p_uid TEXT) RETURNS FLOAT AS $$
 BEGIN
     RETURN (SELECT AVG(attempts) FROM level_played WHERE user_id = p_uid);
 END;
 $$ LANGUAGE plpgsql;
 
--- Función 2: Determinar si un score es "High Score" global
+-- Function 2: Determine if a score is a global high score
 CREATE OR REPLACE FUNCTION fn_is_top_score(p_score INT, p_level INT) RETURNS BOOLEAN AS $$
 DECLARE max_val INT;
 BEGIN
@@ -80,7 +80,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Función 3: Formatear tiempo (segundos a texto)
+-- Function 3: Format time (seconds to text)
 CREATE OR REPLACE FUNCTION fn_format_time(p_seconds INT) RETURNS TEXT AS $$
 BEGIN
     RETURN (p_seconds / 60)::TEXT || 'm ' || (p_seconds % 60)::TEXT || 's';

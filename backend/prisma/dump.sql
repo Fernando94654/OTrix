@@ -81,6 +81,26 @@ ON level_played(user_id);
 
 CREATE INDEX idx_lp_level
 ON level_played(level_id);
+
+-- TABLE: user_level_stats
+CREATE TABLE user_level_stats (
+    user_id UUID NOT NULL,
+    level_id INTEGER NOT NULL,
+    best_score INTEGER DEFAULT 0,
+    best_time INTEGER,
+    total_attempts INTEGER DEFAULT 0,
+    last_played TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_uls_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id),
+
+    CONSTRAINT fk_uls_level
+        FOREIGN KEY (level_id)
+        REFERENCES level(id),
+
+    PRIMARY KEY (user_id, level_id)
+);
  
 -- INSERT TEST DATA
 
