@@ -1,13 +1,12 @@
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function HomePage() {
   return (
     <div className='home'>
       <HeroSection />
-      {/* <MetricsStrip /> */}
       <FeaturesSection />
       <HowItWorksSection />
-      {/* <RockwellSection /> */}
       <ClosingCta />
     </div>
   );
@@ -48,33 +47,6 @@ function HeroSection() {
             <span className='home-hero__meta-sep' />
             <span><b>Work in progress</b> · new scenarios shipping</span>
           </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function MetricsStrip() {
-  const items = [
-    { label: 'Scenarios' },
-    { label: 'Active operators' },
-    { label: 'Completion rate' },
-    { label: 'Always online' }
-  ];
-  return (
-    <section className='home-metrics'>
-      <div className='app-shell-container home-metrics__inner'>
-        <div className='home-metrics__badge'>
-          <span className='home-chip__dot' />
-          Live metrics · available soon
-        </div>
-        <div className='home-metrics__grid'>
-          {items.map((item) => (
-            <div key={item.label} className='home-metric'>
-              <div className='home-metric__value home-metric__value--placeholder' aria-hidden='true'>—</div>
-              <div className='home-metric__label'>{item.label}</div>
-            </div>
-          ))}
         </div>
       </div>
     </section>
@@ -188,30 +160,6 @@ function HowItWorksSection() {
             </li>
           ))}
         </ol>
-      </div>
-    </section>
-  );
-}
-
-function RockwellSection() {
-  return (
-    <section className='home-rockwell'>
-      <div className='app-shell-container home-rockwell__inner'>
-        <div className='home-rockwell__brand'>
-          <img src='/img/Rockwell_Automation_Logo.png' alt='Rockwell Automation' />
-        </div>
-        <div className='home-rockwell__copy'>
-          <span className='home-section__eyebrow'>Built by</span>
-          <h2 className='home-section__title'>The Rockwell Automation team.</h2>
-          <p className='home-section__sub'>
-            OTrix is an internal project by the Rockwell Automation team, exploring how game-based
-            simulation can be used for cybersecurity awareness in industrial environments.
-          </p>
-          <p className='home-section__sub home-rockwell__note'>
-            This is an early work-in-progress build, scenarios, content and dashboards are
-            actively being designed.
-          </p>
-        </div>
       </div>
     </section>
   );

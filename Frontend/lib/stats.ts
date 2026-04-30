@@ -80,15 +80,23 @@ type MaintenanceAction =
   | { action: 'add-company'; token: string; name: string }
   | { action: 'reset-level'; token: string; level_id: number };
 
-export async function runAdminMaintenance(action: MaintenanceAction): Promise<any> {
+type CleanSessionsResponse = { ok: boolean; cleaned_at: string };
+type AddCompanyResponse = { ok: boolean; name: string; created_at: string };
+type ResetLevelResponse = { ok: boolean; level_id: number; reset_at: string };
+type MaintenanceResponse = CleanSessionsResponse | AddCompanyResponse | ResetLevelResponse;
+
+export function runAdminMaintenance(action: { action: 'clean-sessions'; token: string }): Promise<CleanSessionsResponse>;
+export function runAdminMaintenance(action: { action: 'add-company'; token: string; name: string }): Promise<AddCompanyResponse>;
+export function runAdminMaintenance(action: { action: 'reset-level'; token: string; level_id: number }): Promise<ResetLevelResponse>;
+export async function runAdminMaintenance(action: MaintenanceAction): Promise<MaintenanceResponse> {
   const { token } = action;
   if (action.action === 'clean-sessions') {
-    return postLive('/admin/db/clean-sessions', token);
+    return postLive<CleanSessionsResponse>('/admin/db/clean-sessions', token);
   }
   if (action.action === 'add-company') {
-    return postLive('/admin/db/add-company', token, { name: action.name });
+    return postLive<AddCompanyResponse>('/admin/db/add-company', token, { name: action.name });
   }
-  return postLive(`/admin/db/reset-level/${action.level_id}`, token);
+  return postLive<ResetLevelResponse>(`/admin/db/reset-level/${action.level_id}`, token);
 }
 
 function seeded(seed: number) {

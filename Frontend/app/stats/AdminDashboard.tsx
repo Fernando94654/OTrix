@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { BarChart, Donut, FunnelChart, Heatmap, MultiLineChart } from '@/app/components/charts';
+import { BarChart, FunnelChart, Heatmap, MultiLineChart } from '@/app/components/charts';
 import { DIFFICULTY_COLORS } from '@/lib/stats';
 import { runAdminMaintenance } from '@/lib/stats';
 import { getToken } from '@/lib/auth';
@@ -13,16 +13,13 @@ interface Props {
   stats: AdminStatsPayload;
 }
 
-const DEMO_COLORS = ['#60a5fa', '#fbbf24', '#4ade80'];
-const AGE_COLORS = ['#60a5fa', '#22d3ee', '#a855f7', '#f472b6'];
-
 function stickiness(active7d: number, active30d: number) {
   if (active30d === 0) return 0;
   return Math.round((active7d / active30d) * 100);
 }
 
 export default function AdminDashboard({ stats }: Props) {
-  const { platform, growth, funnel, companies, levelCompletion, demographics, activityHeatmap } = stats;
+  const { platform, growth, funnel, companies, levelCompletion, activityHeatmap } = stats;
   const [maintenanceNote, setMaintenanceNote] = useState<string>('');
   const [companyName, setCompanyName] = useState('');
   const [levelId, setLevelId] = useState('');

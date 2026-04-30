@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -46,7 +47,14 @@ export default function Navbar() {
     <header className='app-navbar'>
       <div className='app-shell-container app-navbar__inner'>
         <Link href='/' className='app-brand' aria-label='Go to home'>
-          <img src='/img/Rockwell_Automation_Logo.png' alt='Rockwell Automation' className='app-brand__logo' />
+          <Image
+            src='/img/Rockwell_Automation_Logo.png'
+            alt='Rockwell Automation'
+            className='app-brand__logo'
+            width={160}
+            height={36}
+            priority
+          />
         </Link>
 
         <nav className='app-nav' aria-label='Primary'>
