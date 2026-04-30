@@ -45,6 +45,26 @@ async function fetchLive<T>(path: string, token: string): Promise<T> {
   return (await response.json()) as T;
 }
 
+async function postLive<T>(path: string, token: string, body?: unknown): Promise<T> {
+  let response: Response;
+  try {
+    response = await fetch(`${getBaseUrl()}${path}`, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: body ? JSON.stringify(body) : undefined
+    });
+  } catch {
+    throw new StatsFetchError('network');
+  }
+  if (response.status === 401) throw new StatsFetchError('auth');
+  if (!response.ok) throw new StatsFetchError('server');
+  return (await response.json()) as T;
+}
+
 export async function getPlayerStats({ forceDemo = false, token }: FetchOpts = {}): Promise<PlayerStatsPayload> {
   if (forceDemo || !token) return mockPlayerStats();
   return fetchLive<PlayerStatsPayload>('/stats/me', token);
@@ -53,6 +73,22 @@ export async function getPlayerStats({ forceDemo = false, token }: FetchOpts = {
 export async function getAdminStats({ forceDemo = false, token }: FetchOpts = {}): Promise<AdminStatsPayload> {
   if (forceDemo || !token) return mockAdminStats();
   return fetchLive<AdminStatsPayload>('/admin/stats/summary', token);
+}
+
+type MaintenanceAction =
+  | { action: 'clean-sessions'; token: string }
+  | { action: 'add-company'; token: string; name: string }
+  | { action: 'reset-level'; token: string; level_id: number };
+
+export async function runAdminMaintenance(action: MaintenanceAction): Promise<any> {
+  const { token } = action;
+  if (action.action === 'clean-sessions') {
+    return postLive('/admin/db/clean-sessions', token);
+  }
+  if (action.action === 'add-company') {
+    return postLive('/admin/db/add-company', token, { name: action.name });
+  }
+  return postLive(`/admin/db/reset-level/${action.level_id}`, token);
 }
 
 function seeded(seed: number) {
@@ -133,7 +169,9 @@ export function mockPlayerStats(): PlayerStatsPayload {
     time_played_minutes: Math.round(plays.reduce((s, p) => s + p.time_used, 0) / 60),
     completion_rate: Math.round(
       (plays.filter((p) => p.score >= levelMax(p.level_id) * 0.75).length / plays.length) * 100
-    )
+    ),
+    total_attempts: plays.reduce((s, p) => s + p.attempts, 0),
+    avg_attempts: Math.round((plays.reduce((s, p) => s + p.attempts, 0) / plays.length) * 100) / 100
   };
 
   const trendMap = new Map<string, { total: number; count: number }>();
@@ -198,7 +236,11 @@ export function mockPlayerStats(): PlayerStatsPayload {
       { label: '2–3 tries', count: attempts['2-3'] },
       { label: '4+ tries', count: attempts['4+'] }
     ],
-    recentPlays: plays.slice(0, 8),
+    recentPlays: plays.slice(0, 8).map((p) => ({
+      ...p,
+      formatted_time: `${Math.floor(p.time_used / 60)}m ${p.time_used % 60}s`,
+      top_score: p.score >= levelMax(p.level_id)
+    })),
     leaderboard: Array.from(leaderMap.values()).sort((a, b) => b.total_score - a.total_score).slice(0, 5)
   };
 }

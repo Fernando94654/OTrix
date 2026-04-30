@@ -30,6 +30,7 @@ model User {
 
   sessions    Session[]
   levelsPlayed LevelPlayed[]
+  stats        UserLevelStats[]
 
   @@index([company_id])
   @@map("users")
@@ -42,7 +43,8 @@ model Level {
   difficulty String?
 
   levelsPlayed LevelPlayed[]
-
+  stats        UserLevelStats[]
+  
   @@map("level")
 }
 
@@ -85,6 +87,20 @@ model LevelPlayed {
   @@map("level_played")
 }
 
+model UserLevelStats {
+  user_id        String
+  level_id       Int
+  best_score     Int      @default(0)
+  best_time      Int?     // En segundos o milisegundos
+  total_attempts Int      @default(0)
+  last_played    DateTime @default(now())
+
+  user  User  @relation(fields: [user_id], references: [id])
+  level Level @relation(fields: [level_id], references: [id])
+
+  @@id([user_id, level_id]) // Llave primaria compuesta
+  @@map("user_level_stats")
+}
 
 enum Gender {
   MALE

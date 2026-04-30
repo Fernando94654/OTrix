@@ -17,6 +17,8 @@ export interface LevelPlayedRecord {
   score: number;
   attempts: number;
   time_used: number;
+  formatted_time?: string;
+  top_score?: boolean;
   date: string;
 }
 
@@ -37,6 +39,8 @@ export interface PlayerStatsPayload {
     best_score: number;
     time_played_minutes: number;
     completion_rate: number;
+    total_attempts: number;
+    avg_attempts: number;
   };
   scoreTrend: { date: string; score: number }[];
   levelPerformance: {

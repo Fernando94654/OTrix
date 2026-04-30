@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 type Difficulty = 'Easy' | 'Medium' | 'Hard' | 'Insane';
@@ -31,7 +31,7 @@ export class StatsService {
 
     async getPlayerStats(userId: string) {
         const start = Date.now();
-        const [user, plays, levels, globalLeaderboard] = await Promise.all([
+        const [user, plays, levels, globalLeaderboard, userLevelStatsRows, avgAttemptsRows] = await Promise.all([
             this.prisma.user.findUnique({ where: { id: userId }, select: { id: true, name: true, last_name: true } }),
             this.prisma.levelPlayed.findMany({
                 where: { user_id: userId, date: { not: null } },
@@ -40,18 +40,30 @@ export class StatsService {
             }),
             this.prisma.level.findMany(),
             this.leaderboard(5),
+            this.prisma.$queryRaw<{ best_score: number; total_attempts: number }[]>`
+                SELECT best_score, total_attempts
+                FROM user_level_stats
+                WHERE user_id = ${userId}
+            `,
+            this.prisma.$queryRaw<{ avg_attempts: number | null }[]>`SELECT fn_get_avg_attempts(${userId}) AS avg_attempts`,
         ]);
 
         const playerName = user ? `${user.name} ${user.last_name?.[0] ?? ''}.`.trim() : 'Player';
 
+    const bestScore = userLevelStatsRows.reduce((max, row) => Math.max(max, row.best_score ?? 0), 0);
+    const totalAttempts = userLevelStatsRows.reduce((sum, row) => sum + (row.total_attempts ?? 0), 0);
+        const avgAttempts = avgAttemptsRows[0]?.avg_attempts ?? 0;
+
         const totals = {
             plays: plays.length,
             avg_score: plays.length ? Math.round(plays.reduce((s, p) => s + (p.score ?? 0), 0) / plays.length) : 0,
-            best_score: plays.reduce((m, p) => Math.max(m, p.score ?? 0), 0),
+            best_score: bestScore,
             time_played_minutes: Math.round(plays.reduce((s, p) => s + (p.time_used ?? 0), 0) / 60),
             completion_rate: plays.length === 0 ? 0 : Math.round(
                 (plays.filter((p) => (p.score ?? 0) >= (p.level.max_score ?? 0) * COMPLETION_RATIO).length / plays.length) * 100
             ),
+            total_attempts: totalAttempts,
+            avg_attempts: Math.round(avgAttempts * 100) / 100,
         };
 
         const trendBuckets = emptyDays(30);
@@ -90,6 +102,32 @@ export class StatsService {
 
         this.logger.log(`player stats · user=${userId} plays=${plays.length} ms=${Date.now() - start}`);
 
+        const recentBase = plays.slice(0, 8);
+        const recentPlays = await Promise.all(
+            recentBase.map(async (p) => {
+                const score = p.score ?? 0;
+                const timeUsed = p.time_used ?? 0;
+                const [meta] = await this.prisma.$queryRaw<
+                    { is_top: boolean; formatted_time: string }[]
+                >`SELECT fn_is_top_score(${score}, ${p.level_id}) AS is_top, fn_format_time(${timeUsed}) AS formatted_time`;
+
+                return {
+                    id: p.id,
+                    user_id: p.user_id,
+                    user_name: playerName,
+                    level_id: p.level_id,
+                    level_name: p.level.name ?? `Level ${p.level_id}`,
+                    difficulty: toDifficulty(p.level.difficulty),
+                    score,
+                    attempts: p.attempts ?? 0,
+                    time_used: timeUsed,
+                    formatted_time: meta?.formatted_time ?? fnFormatFallback(timeUsed),
+                    top_score: meta?.is_top ?? false,
+                    date: p.date?.toISOString() ?? new Date().toISOString(),
+                };
+            })
+        );
+
         return {
             source: 'live' as const,
             generated_at: new Date().toISOString(),
@@ -101,18 +139,7 @@ export class StatsService {
                 { label: '2–3 tries', count: attempts.mid },
                 { label: '4+ tries', count: attempts.many },
             ],
-            recentPlays: plays.slice(0, 8).map((p) => ({
-                id: p.id,
-                user_id: p.user_id,
-                user_name: playerName,
-                level_id: p.level_id,
-                level_name: p.level.name ?? `Level ${p.level_id}`,
-                difficulty: toDifficulty(p.level.difficulty),
-                score: p.score ?? 0,
-                attempts: p.attempts ?? 0,
-                time_used: p.time_used ?? 0,
-                date: p.date?.toISOString() ?? new Date().toISOString(),
-            })),
+            recentPlays,
             leaderboard: globalLeaderboard,
         };
     }
@@ -364,4 +391,31 @@ export class StatsService {
         for (const uid of prevWeek) if (thisWeek.has(uid)) retained++;
         return Math.round((retained / prevWeek.size) * 100);
     }
+
+    async cleanSessions() {
+        await this.prisma.$executeRaw`CALL sp_clean_sessions()`;
+        return { ok: true, cleaned_at: new Date().toISOString() };
+    }
+
+    async resetLevel(levelId: number) {
+        if (!Number.isFinite(levelId) || levelId <= 0) {
+            throw new BadRequestException('Invalid level id');
+        }
+        await this.prisma.$executeRaw`CALL sp_reset_level(${levelId})`;
+        return { ok: true, level_id: levelId, reset_at: new Date().toISOString() };
+    }
+
+    async addCompany(name: string) {
+        if (!name || name.trim().length === 0) {
+            throw new BadRequestException('Company name is required');
+        }
+        await this.prisma.$executeRaw`CALL sp_add_company(${name.trim()})`;
+        return { ok: true, name: name.trim(), created_at: new Date().toISOString() };
+    }
+}
+
+function fnFormatFallback(seconds: number) {
+    const minutes = Math.floor(seconds / 60);
+    const rest = Math.max(0, seconds % 60);
+    return `${minutes}m ${rest}s`;
 }

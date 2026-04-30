@@ -1,8 +1,12 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { BarChart, Donut, FunnelChart, Heatmap, MultiLineChart } from '@/app/components/charts';
 import { DIFFICULTY_COLORS } from '@/lib/stats';
+import { runAdminMaintenance } from '@/lib/stats';
+import { getToken } from '@/lib/auth';
+import { notifyError, notifySuccess } from '@/lib/notifications';
 import type { AdminStatsPayload } from '@/types/stats';
 
 interface Props {
@@ -19,6 +23,45 @@ function stickiness(active7d: number, active30d: number) {
 
 export default function AdminDashboard({ stats }: Props) {
   const { platform, growth, funnel, companies, levelCompletion, demographics, activityHeatmap } = stats;
+  const [maintenanceNote, setMaintenanceNote] = useState<string>('');
+  const [companyName, setCompanyName] = useState('');
+  const [levelId, setLevelId] = useState('');
+
+  async function runAction(action: 'clean-sessions' | 'add-company' | 'reset-level') {
+    try {
+      const token = getToken();
+      if (!token) throw new Error('auth');
+
+      if (action === 'clean-sessions') {
+        const res = await runAdminMaintenance({ action, token });
+        const message = `Sessions cleaned · ${new Date(res.cleaned_at).toLocaleString()}`;
+        setMaintenanceNote(message);
+        notifySuccess(message);
+        return;
+      }
+
+      if (action === 'add-company') {
+        const name = companyName.trim();
+        if (!name) throw new Error('Company name required');
+        const res = await runAdminMaintenance({ action, token, name });
+        const message = `Company created · ${res.name}`;
+        setMaintenanceNote(message);
+        notifySuccess(message);
+        setCompanyName('');
+        return;
+      }
+
+      const id = Number(levelId);
+      if (!Number.isFinite(id) || id <= 0) throw new Error('Valid level id required');
+      const res = await runAdminMaintenance({ action, token, level_id: id });
+      const message = `Level reset · ${res.level_id}`;
+      setMaintenanceNote(message);
+      notifySuccess(message);
+      setLevelId('');
+    } catch (err) {
+      notifyError(err instanceof Error ? err.message : 'Could not run action');
+    }
+  }
 
   return (
     <div className='stats-dashboard'>
@@ -45,6 +88,34 @@ export default function AdminDashboard({ stats }: Props) {
       </section>
 
       <section className='stats-grid'>
+        <article className='stats-panel stats-panel--sm'>
+          <header className='stats-panel-head'>
+            <h2>DB maintenance</h2>
+            <span>Run stored procedures</span>
+          </header>
+          <div className='stats-maintenance'>
+            <button className='btn btn-light btn-sm' onClick={() => runAction('clean-sessions')}>Clean sessions</button>
+            <div className='stats-inline-form'>
+              <input
+                className='input'
+                placeholder='Company name'
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
+              />
+              <button className='btn btn-light btn-sm' onClick={() => runAction('add-company')}>Add company</button>
+            </div>
+            <div className='stats-inline-form'>
+              <input
+                className='input'
+                placeholder='Level id'
+                value={levelId}
+                onChange={(e) => setLevelId(e.target.value)}
+              />
+              <button className='btn btn-light btn-sm' onClick={() => runAction('reset-level')}>Reset level</button>
+            </div>
+            {maintenanceNote && <p className='stats-note'>{maintenanceNote}</p>}
+          </div>
+        </article>
         <article className='stats-panel stats-panel--wide'>
           <header className='stats-panel-head'>
             <h2>Growth</h2>

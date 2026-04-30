@@ -82,6 +82,7 @@ export default function PlayerDashboard({ stats }: Props) {
             }))}
             centerLabel='plays'
           />
+          <p className='stats-note'>Avg attempts: {totals.avg_attempts} · Total attempts: {totals.total_attempts}</p>
         </article>
 
         <article className='stats-panel stats-panel--wide'>
@@ -127,10 +128,11 @@ export default function PlayerDashboard({ stats }: Props) {
                       <span className='stats-diff-chip' style={{ background: `${DIFFICULTY_COLORS[p.difficulty]}22`, color: DIFFICULTY_COLORS[p.difficulty] }}>
                         {p.difficulty}
                       </span>
+                      {p.top_score && <span className='stats-diff-chip stats-top-chip'>Top</span>}
                     </td>
                     <td className='text-end stats-num'>{p.score}</td>
                     <td className='text-end stats-num'>{p.attempts}</td>
-                    <td className='text-end stats-num'>{formatTime(p.time_used)}</td>
+                    <td className='text-end stats-num'>{p.formatted_time ?? formatTime(p.time_used)}</td>
                   </tr>
                 ))}
               </tbody>

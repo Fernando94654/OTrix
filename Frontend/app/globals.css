@@ -1082,6 +1082,32 @@ body:has(.videogame-stage) {
   grid-column: span 12;
 }
 
+.stats-maintenance {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stats-inline-form {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stats-note {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-subtle);
+}
+
+.stats-top-chip {
+  margin-left: 0.4rem;
+  background: #fbbf2422;
+  color: #fbbf24;
+  border: 1px solid #fbbf2444;
+}
+
 @media (max-width: 992px) {
   .stats-panel,
   .stats-panel--sm,
